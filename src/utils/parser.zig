@@ -39,6 +39,13 @@ pub const PokemonList = struct {
     }
 };
 
+fn getOptionalString(value: ?std.json.Value, default: []const u8) []const u8 {
+    if (value) |val| {
+        return val.string;
+    }
+    return default;
+}
+
 pub fn loadPokemonList(allocator: std.mem.Allocator) !PokemonList {
     const file = try std.fs.cwd().openFile("assets/pokemon.json", .{});
     defer file.close();
@@ -48,7 +55,6 @@ pub fn loadPokemonList(allocator: std.mem.Allocator) !PokemonList {
     defer allocator.free(buffer);
     _ = try file.readAll(buffer);
 
-    // Parse the JSON array
     var parsed = try std.json.parseFromSlice(
         []const std.json.Value,
         allocator,
@@ -62,25 +68,28 @@ pub fn loadPokemonList(allocator: std.mem.Allocator) !PokemonList {
 
     for (root, 0..) |item, i| {
         const obj = item.object;
+        const name_obj = obj.get("name").?.object;
+        const desc_obj = if (obj.get("desc")) |desc| desc.object else return error.MissingDesc;
+
         pokemon_list[i] = Pokemon{
             .idx = @intCast(obj.get("idx").?.integer),
             .slug = try allocator.dupe(u8, obj.get("slug").?.string),
             .gen = @intCast(obj.get("gen").?.integer),
             .name = PokemonName{
-                .en = obj.get("name").?.object.get("en").?.string,
-                .ja = obj.get("name").?.object.get("ja").?.string,
-                .fr = obj.get("name").?.object.get("fr").?.string,
-                .de = obj.get("name").?.object.get("de").?.string,
-                .zh_hans = obj.get("name").?.object.get("zh_hans").?.string,
-                .zh_hant = obj.get("name").?.object.get("zh_hant").?.string,
+                .en = getOptionalString(name_obj.get("en"), "Unknown"),
+                .ja = getOptionalString(name_obj.get("ja"), ""),
+                .fr = getOptionalString(name_obj.get("fr"), ""),
+                .de = getOptionalString(name_obj.get("de"), ""),
+                .zh_hans = getOptionalString(name_obj.get("zh_hans"), ""),
+                .zh_hant = getOptionalString(name_obj.get("zh_hant"), ""),
             },
             .desc = PokemonDesc{
-                .en = obj.get("desc").?.object.get("en").?.string,
-                .fr = obj.get("desc").?.object.get("fr").?.string,
-                .de = obj.get("desc").?.object.get("de").?.string,
-                .ja = obj.get("desc").?.object.get("ja").?.string,
-                .zh_hans = obj.get("desc").?.object.get("zh_hans").?.string,
-                .zh_hant = obj.get("desc").?.object.get("zh_hant").?.string,
+                .en = getOptionalString(desc_obj.get("en"), "No description available."),
+                .fr = getOptionalString(desc_obj.get("fr"), ""),
+                .de = getOptionalString(desc_obj.get("de"), ""),
+                .ja = getOptionalString(desc_obj.get("ja"), ""),
+                .zh_hans = getOptionalString(desc_obj.get("zh_hans"), ""),
+                .zh_hant = getOptionalString(desc_obj.get("zh_hant"), ""),
             },
             .forms = &[_][]const u8{},
         };
