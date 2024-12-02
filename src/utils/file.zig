@@ -1,8 +1,8 @@
 const std = @import("std");
 
 pub fn findProjectRoot() ![]const u8 {
-    var buffer: [std.fs.MAX_PATH_BYTES]u8 = undefined;
-    const cwd = try std.os.getcwd(&buffer);
+    const cwd = try std.process.getCwdAlloc(std.heap.page_allocator);
+    defer std.heap.page_allocator.free(cwd);
 
     // Check if we're in the project root (where assets directory exists)
     var dir = try std.fs.openDirAbsolute(cwd, .{});
