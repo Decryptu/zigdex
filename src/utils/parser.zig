@@ -28,13 +28,12 @@ pub const Pokemon = struct {
 };
 
 pub const PokemonList = struct {
-    pokemons: []Pokemon,
+    pokemons: []const Pokemon,
     allocator: std.mem.Allocator,
 
-    pub fn deinit(self: *PokemonList) void {
+    pub fn deinit(self: *const PokemonList) void {
         for (self.pokemons) |pokemon| {
             self.allocator.free(pokemon.slug);
-            // Free other allocated memory as needed
         }
         self.allocator.free(self.pokemons);
     }
@@ -49,9 +48,43 @@ pub fn loadPokemonList(allocator: std.mem.Allocator) !PokemonList {
     defer allocator.free(buffer);
     _ = try file.readAll(buffer);
 
-    var token_stream = std.json.TokenStream.init(buffer);
-    const options = std.json.ParseOptions{ .allocator = allocator };
-    const pokemon_list = try std.json.parse([]Pokemon, &token_stream, options);
+    // Parse the JSON array
+    var parsed = try std.json.parseFromSlice(
+        []const std.json.Value,
+        allocator,
+        buffer,
+        .{},
+    );
+    defer parsed.deinit();
+
+    const root = parsed.value;
+    var pokemon_list = try allocator.alloc(Pokemon, root.len);
+
+    for (root, 0..) |item, i| {
+        const obj = item.object;
+        pokemon_list[i] = Pokemon{
+            .idx = @intCast(obj.get("idx").?.integer),
+            .slug = try allocator.dupe(u8, obj.get("slug").?.string),
+            .gen = @intCast(obj.get("gen").?.integer),
+            .name = PokemonName{
+                .en = obj.get("name").?.object.get("en").?.string,
+                .ja = obj.get("name").?.object.get("ja").?.string,
+                .fr = obj.get("name").?.object.get("fr").?.string,
+                .de = obj.get("name").?.object.get("de").?.string,
+                .zh_hans = obj.get("name").?.object.get("zh_hans").?.string,
+                .zh_hant = obj.get("name").?.object.get("zh_hant").?.string,
+            },
+            .desc = PokemonDesc{
+                .en = obj.get("desc").?.object.get("en").?.string,
+                .fr = obj.get("desc").?.object.get("fr").?.string,
+                .de = obj.get("desc").?.object.get("de").?.string,
+                .ja = obj.get("desc").?.object.get("ja").?.string,
+                .zh_hans = obj.get("desc").?.object.get("zh_hans").?.string,
+                .zh_hant = obj.get("desc").?.object.get("zh_hant").?.string,
+            },
+            .forms = &[_][]const u8{},
+        };
+    }
 
     return PokemonList{
         .pokemons = pokemon_list,
@@ -63,8 +96,14 @@ pub fn findPokemonByName(allocator: std.mem.Allocator, name: []const u8) !?Pokem
     var pokemon_list = try loadPokemonList(allocator);
     defer pokemon_list.deinit();
 
+    const lower_name = try std.ascii.allocLowerString(allocator, name);
+    defer allocator.free(lower_name);
+
     for (pokemon_list.pokemons) |pokemon| {
-        if (std.mem.eql(u8, std.ascii.lowerString(allocator, pokemon.slug) catch continue, std.ascii.lowerString(allocator, name) catch continue)) {
+        const lower_slug = try std.ascii.allocLowerString(allocator, pokemon.slug);
+        defer allocator.free(lower_slug);
+
+        if (std.mem.eql(u8, lower_slug, lower_name)) {
             return pokemon;
         }
     }
