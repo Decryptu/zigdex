@@ -19,16 +19,18 @@ pub fn build(b: *std.Build) void {
         run_cmd.addArgs(args);
     }
 
-    const run_step = b.step("run", "Run zigdex");
+    const run_step = b.step("run", "Run the app");
     run_step.dependOn(&run_cmd.step);
 
-    const unit_tests = b.addTest(.{
+    // Add tests
+    const test_step = b.step("test", "Run unit tests");
+
+    const exe_tests = b.addTest(.{
         .root_source_file = .{ .cwd_relative = "src/main.zig" },
         .target = target,
         .optimize = optimize,
     });
 
-    const run_unit_tests = b.addRunArtifact(unit_tests);
-    const test_step = b.step("test", "Run unit tests");
-    test_step.dependOn(&run_unit_tests.step);
+    const run_exe_tests = b.addRunArtifact(exe_tests);
+    test_step.dependOn(&run_exe_tests.step);
 }

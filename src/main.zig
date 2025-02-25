@@ -1,68 +1,43 @@
 const std = @import("std");
-const commands = @import("commands/random.zig");
-const display = @import("commands/display.zig");
-const parser = @import("utils/parser.zig");
+const sprites = @import("sprites.zig");
+const args_module = @import("args.zig");
 
 pub fn main() !void {
+    // Initialize memory allocator
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    // Get command line arguments
-    const args = try std.process.argsAlloc(allocator);
-    defer std.process.argsFree(allocator, args);
+    // Parse command line arguments
+    var args = try args_module.parse(allocator);
+    defer args.deinit();
 
-    if (args.len < 2) {
-        try printUsage();
+    // Show help if requested or no action specified
+    if (args.help or (!args.random and args.pokemon_name == null)) {
+        try args_module.printUsage(std.io.getStdOut().writer());
         return;
     }
 
-    // Parse arguments and execute commands
-    try handleCommand(allocator, args);
-}
-
-fn handleCommand(allocator: std.mem.Allocator, args: []const []const u8) !void {
-    const command = args[1];
-
-    // Check for help flag
-    if (std.mem.eql(u8, command, "--help") or std.mem.eql(u8, command, "-h")) {
-        try printUsage();
+    // Handle random Pokemon display
+    if (args.random) {
+        sprites.displayRandom(allocator, args.shiny) catch |err| {
+            std.debug.print("Error: {s}\n", .{@errorName(err)});
+            return err;
+        };
         return;
     }
 
-    // Check for shiny flag
-    var force_shiny = false;
-    for (args) |arg| {
-        if (display.isShinyFlag(arg)) {
-            force_shiny = true;
-            break;
-        }
-    }
-
-    // Handle random command
-    if (std.mem.eql(u8, command, "--random") or std.mem.eql(u8, command, "-r")) {
-        try commands.displayRandomPokemon(allocator, force_shiny);
+    // Handle specific Pokemon display
+    if (args.pokemon_name) |name| {
+        sprites.display(allocator, name, args.shiny) catch |err| {
+            if (err == error.PokemonNotFound) {
+                std.debug.print("Pokemon '{s}' not found.\n", .{name});
+                return err;
+            } else {
+                std.debug.print("Error: {s}\n", .{@errorName(err)});
+                return err;
+            }
+        };
         return;
     }
-
-    // Handle specific pokemon display
-    try display.showPokemon(allocator, command, .{ .force_shiny = force_shiny });
-}
-
-fn printUsage() !void {
-    const usage =
-        \\Usage: zigdex [options] [pokemon]
-        \\
-        \\Options:
-        \\  -r, --random    Display a random pokemon (1% chance of shiny)
-        \\  -s, --shiny     Force shiny variant
-        \\  -h, --help      Display this help message
-        \\
-        \\Examples:
-        \\  zigdex pikachu
-        \\  zigdex pikachu --shiny
-        \\  zigdex --random
-        \\
-    ;
-    try std.io.getStdOut().writeAll(usage);
 }
