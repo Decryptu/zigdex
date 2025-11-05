@@ -9,7 +9,6 @@ pub const Args = struct {
 
     pub fn deinit(self: *Args) void {
         _ = self;
-        // Nothing to deinit in this simple implementation
     }
 };
 
@@ -17,7 +16,6 @@ pub fn parse(allocator: std.mem.Allocator) !Args {
     var args_it = try std.process.argsWithAllocator(allocator);
     defer args_it.deinit();
 
-    // Skip executable name
     _ = args_it.skip();
 
     var result = Args{
@@ -42,8 +40,8 @@ pub fn parse(allocator: std.mem.Allocator) !Args {
     return result;
 }
 
-pub fn printUsage(writer: anytype) !void {
-    try writer.writeAll(
+pub fn printUsage() !void {
+    try std.fs.File.stdout().writeAll(
         \\Usage: zigdex [options] [pokemon]
         \\
         \\Options:

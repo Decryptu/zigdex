@@ -1,11 +1,9 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
-// Constants for asset paths - adjust these based on your installation
 const REGULAR_SPRITES_PATH = "assets/colorscripts/regular";
 const SHINY_SPRITES_PATH = "assets/colorscripts/shiny";
 
-// Get project directory (current working directory)
 fn getProjectPath(allocator: std.mem.Allocator) ![]const u8 {
     return std.process.getCwdAlloc(allocator);
 }
@@ -18,7 +16,6 @@ fn getSpritePath(allocator: std.mem.Allocator, name: []const u8, shiny: bool) ![
     return try std.fs.path.join(allocator, &[_][]const u8{ project_dir, base_dir, name });
 }
 
-// Read a sprite file and return its contents
 pub fn getSprite(allocator: std.mem.Allocator, name: []const u8, shiny: bool) ![]const u8 {
     const sprite_path = try getSpritePath(allocator, name, shiny);
     defer allocator.free(sprite_path);
@@ -44,7 +41,6 @@ pub fn getSprite(allocator: std.mem.Allocator, name: []const u8, shiny: bool) ![
     return content;
 }
 
-// Get a list of available sprites in a directory
 fn getAvailableSprites(allocator: std.mem.Allocator, shiny: bool) ![][]const u8 {
     const project_dir = try getProjectPath(allocator);
     defer allocator.free(project_dir);
@@ -63,26 +59,25 @@ fn getAvailableSprites(allocator: std.mem.Allocator, shiny: bool) ![][]const u8 
     };
     defer dir.close();
 
-    var sprites = std.ArrayList([]const u8).init(allocator);
+    var sprites = try std.ArrayList([]const u8).initCapacity(allocator, 0);
     errdefer {
         for (sprites.items) |item| {
             allocator.free(item);
         }
-        sprites.deinit();
+        sprites.deinit(allocator);
     }
 
     var iter = dir.iterate();
     while (try iter.next()) |entry| {
         if (entry.kind == .file) {
             const name = try allocator.dupe(u8, entry.name);
-            try sprites.append(name);
+            try sprites.append(allocator, name);
         }
     }
 
-    return sprites.toOwnedSlice();
+    return sprites.toOwnedSlice(allocator);
 }
 
-// Display a random sprite
 pub fn displayRandom(allocator: std.mem.Allocator, shiny: bool) !void {
     const sprites_list = try getAvailableSprites(allocator, shiny);
     defer {
@@ -96,25 +91,21 @@ pub fn displayRandom(allocator: std.mem.Allocator, shiny: bool) !void {
         return error.NoSpritesFound;
     }
 
-    // Initialize PRNG with current timestamp
-    var prng = std.rand.DefaultPrng.init(@as(u64, @truncate(@as(u128, @bitCast(std.time.nanoTimestamp())))));
+    var prng = std.Random.DefaultPrng.init(@as(u64, @truncate(@as(u128, @bitCast(std.time.nanoTimestamp())))));
     const random = prng.random();
 
-    const index = random.uintLessThan(usize, sprites_list.len);
+    const index = random.intRangeAtMost(usize, 0, sprites_list.len - 1);
     const pokemon_name = sprites_list[index];
 
     const sprite_content = try getSprite(allocator, pokemon_name, shiny);
     defer allocator.free(sprite_content);
 
-    const stdout = std.io.getStdOut().writer();
-    try stdout.writeAll(sprite_content);
+    try std.fs.File.stdout().writeAll(sprite_content);
 }
 
-// Display a specific sprite
 pub fn display(allocator: std.mem.Allocator, name: []const u8, shiny: bool) !void {
     const sprite_content = try getSprite(allocator, name, shiny);
     defer allocator.free(sprite_content);
 
-    const stdout = std.io.getStdOut().writer();
-    try stdout.writeAll(sprite_content);
+    try std.fs.File.stdout().writeAll(sprite_content);
 }
