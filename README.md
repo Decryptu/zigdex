@@ -1,10 +1,17 @@
+<div align="center">
+
 # zigdex
 
-<img width="256" height="256" alt="zigdex-logo" src="https://github.com/user-attachments/assets/a19eb7f8-d363-4afe-af5e-ad46f87d02c1" />
+<img width="128" height="128" alt="zigdex-logo" src="https://github.com/user-attachments/assets/a19eb7f8-d363-4afe-af5e-ad46f87d02c1" />
+
+[![Zig](https://img.shields.io/badge/Zig-0.15.2-orange?logo=zig&logoColor=white)](https://ziglang.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
-<img width="834" height="568" alt="zigdex-screenshot" src="https://github.com/user-attachments/assets/c2ebf09a-51d8-46d1-923f-0160882262ef" />
+<img width="834" alt="zigdex-screenshot" src="https://github.com/user-attachments/assets/c2ebf09a-51d8-46d1-923f-0160882262ef" />
+
+</div>
 
 ## Features
 
