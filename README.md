@@ -2,6 +2,8 @@
 
 A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
+<img width="834" height="568" alt="zigdex-screenshot" src="https://github.com/user-attachments/assets/c2ebf09a-51d8-46d1-923f-0160882262ef" />
+
 ## Features
 
 - 🎲 Random Pokemon with 1/128 shiny chance
