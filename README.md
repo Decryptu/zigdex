@@ -10,6 +10,21 @@ A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 - 📦 Single self-contained executable
 - ⚡ Optimized for shell startup scripts
 
+## Installation
+
+### Homebrew (macOS/Linux)
+
+```bash
+brew tap Decryptu/tap
+brew install zigdex
+```
+
+*Note: While zigdex is being reviewed for inclusion in Homebrew core, you can install it from my personal tap.*
+
+### Manual Installation
+
+Download the appropriate binary for your architecture from the [releases page](https://github.com/Decryptu/zigdex/releases) and add it to your PATH.
+
 ## Building
 
 ```bash
