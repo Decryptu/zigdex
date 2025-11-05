@@ -1,5 +1,7 @@
 # zigdex
 
+<img width="256" height="256" alt="zigdex-logo" src="https://github.com/user-attachments/assets/a19eb7f8-d363-4afe-af5e-ad46f87d02c1" />
+
 A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
 <img width="834" height="568" alt="zigdex-screenshot" src="https://github.com/user-attachments/assets/c2ebf09a-51d8-46d1-923f-0160882262ef" />
