@@ -1,0 +1,2 @@
+84697dfbaea8226bf348a9a54bd66856ede4ff6a9693d6be38297d167e3ca10e  zigdex-v0.1.0-aarch64-macos.tar.gz
+ace380a586b255a4e2f38539f453cd062ad0fa79d03eb9ff9694c86382f49877  zigdex-v0.1.0-x86_64-macos.tar.gz
