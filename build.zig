@@ -4,6 +4,21 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    // Generate embedded sprites at compile time
+    const gen_sprites = b.addExecutable(.{
+        .name = "generate_sprites",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("tools/generate_sprites.zig"),
+            .target = target,
+            .optimize = .ReleaseFast,
+        }),
+    });
+
+    const run_gen = b.addRunArtifact(gen_sprites);
+    run_gen.addFileArg(b.path("assets/pokemon.json"));
+    run_gen.addDirectoryArg(b.path("assets/colorscripts"));
+    const sprites_file = run_gen.addOutputFileArg("embedded_sprites.zig");
+
     const exe = b.addExecutable(.{
         .name = "zigdex",
         .root_module = b.createModule(.{
@@ -11,6 +26,10 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
         }),
+    });
+
+    exe.root_module.addAnonymousImport("embedded_sprites", .{
+        .root_source_file = sprites_file,
     });
 
     b.installArtifact(exe);
@@ -32,6 +51,10 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
         }),
+    });
+
+    exe_tests.root_module.addAnonymousImport("embedded_sprites", .{
+        .root_source_file = sprites_file,
     });
 
     const run_exe_tests = b.addRunArtifact(exe_tests);
