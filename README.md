@@ -1,56 +1,127 @@
 # zigdex
 
+A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
+
+## Features
+
+- 🎲 Random Pokemon with 1/128 shiny chance
+- ✨ Shiny variant support
+- 🚀 Sprites embedded in binary (works offline)
+- 📦 Single self-contained executable
+- ⚡ Optimized for shell startup scripts
+
+## Building
+
 ```bash
-src/
-├── main.zig       # Entry point and argument handling
-├── sprites.zig    # Sprite management and display 
-└── args.zig       # Simple argument parser
-build.zig         # Build script
+zig build
 ```
 
-## Key Features and Implementation Details
+This will:
 
-This implementation avoids embedding all sprites at compile time, which would significantly increase binary size with many Pokemon. Instead, it:
-
-1. **Reads Sprites at Runtime**:
-   - Retrieves the directory of the executable
-   - Looks for sprites in the appropriate paths
-   - Loads only what's needed when requested
-
-2. **Fast Random Selection**:
-   - Scans the directory once to get available Pokemon
-   - Uses Zig's PRNG with nanosecond timestamp for randomness
-   - Avoids loading all sprites into memory simultaneously
-
-3. **Clean Error Handling**:
-   - Provides clear error messages for common issues
-   - Properly checks for file existence and readability
-   - Handles memory resources correctly with proper deallocation
-
-4. **Simple Command Processing**:
-   - Lightweight argument parser without external dependencies
-   - Supports all requested commands (`--random`, `--shiny`, specific Pokemon)
-
-5. **Resource Management**:
-   - Uses defer patterns to ensure resources are freed
-   - Manages memory allocation properly with the GeneralPurposeAllocator
+1. Generate embedded sprites from your `assets/` directory at compile time
+2. Create a single executable at `zig-out/bin/zigdex`
+3. Embed all 1010+ Pokemon sprites directly into the binary
 
 ## Usage
 
-1. Build the project:
+```bash
+# Random Pokemon (1/128 chance for shiny)
+zigdex --random
 
-    ```bash
-    zig build
-    ```
+# Specific Pokemon by name
+zigdex pikachu
+zigdex bulbasaur charmander squirtle
 
-2. Run with various options:
+# By Pokedex number
+zigdex 25
+zigdex 1 4 7
 
-    ```bash
-    ./zig-out/bin/zigdex --random
-    ./zig-out/bin/zigdex pikachu
-    ./zig-out/bin/zigdex pikachu --shiny
-    ```
+# Force shiny variant
+zigdex pikachu --shiny
+zigdex --random --shiny
 
-The program expects your sprites to be in `assets/colorscripts/regular/` and `assets/colorscripts/shiny/` relative to the executable location.
+# Hide Pokemon name
+zigdex pikachu --hide-name
+zigdex --random --hide-name
+```
 
-This implementation is lightweight, straightforward, and fast enough to be used in shell startup scripts without noticeable delay.
+## Shell Integration
+
+Add to your `.zshrc` or `.bashrc`:
+
+```bash
+# Show random Pokemon on terminal start
+zigdex --random --hide-name
+
+# Or with fastfetch
+alias fastfetch='zigdex --random --hide-name | command fastfetch --logo-type file-raw --logo -'
+```
+
+## Project Structure
+
+```tree
+zigdex/
+├── src/
+│   ├── main.zig       # Entry point and CLI
+│   ├── args.zig       # Argument parser
+│   └── sprites.zig    # Pokemon lookup and display
+├── tools/
+│   └── generate_sprites.zig  # Build-time sprite embedder
+├── assets/
+│   ├── pokemon.json
+│   └── colorscripts/
+│       ├── regular/   # Normal sprites
+│       └── shiny/     # Shiny variants
+└── build.zig
+```
+
+## Implementation Details
+
+### Compile-Time Sprite Embedding
+
+- Sprites are converted to byte arrays at compile time
+- The `generate_sprites.zig` tool runs during build
+- Creates `embedded_sprites.zig` with all Pokemon data
+- No runtime filesystem dependencies
+- Binary size: ~50-100MB (fully self-contained)
+
+### Fast Random Selection
+
+- Uses `std.Random.DefaultPrng` with nanosecond seed
+- 1/128 chance for shiny (mimicking main series games)
+- O(1) lookup by index
+- Zero filesystem I/O at runtime
+
+### Pokemon Lookup
+
+Supports multiple lookup methods:
+
+- Case-insensitive name matching (`pikachu`, `PIKACHU`)
+- Slug matching (`charizard-mega-x`)
+- Pokedex number (`25`, `150`)
+
+### Memory Management
+
+- Uses `GeneralPurposeAllocator` for safety
+- Proper `defer` patterns for cleanup
+- No memory leaks in debug builds
+- Efficient argument parsing
+
+## Command-Line Options
+
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--random` | `-r` | Display random Pokemon (1/128 shiny) |
+| `--shiny` | `-s` | Force shiny variant |
+| `--hide-name` | | Don't print Pokemon name |
+| `--help` | `-h` | Show help message |
+
+## Requirements
+
+- Zig 0.15.2 or later
+- Terminal with ANSI color support
+- Pokemon sprite assets in `assets/` directory
+
+## License
+
+MIT
