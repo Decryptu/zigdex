@@ -25,14 +25,14 @@ A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
 | Command | Mean [µs] | Min [µs] | Max [µs] | Relative |
 |:---|---:|---:|---:|---:|
-| `zigdex random` | 751.0 ± 276.3 | 369.9 | 6820.5 | 1.00 |
-| `pokeget random` | 1281.6 ± 291.6 | 956.8 | 4184.1 | 1.71 ± 0.74 |
-| `krabby random` | 3949.6 ± 766.9 | 3284.2 | 13323.7 | 5.26 ± 2.19 |
+| `zigdex random` | 630.4 ± 130.2 | 407.6 | 1993.0 | 1.00 |
+| `pokeget random` | 1203.0 ± 387.7 | 889.1 | 10657.3 | 1.91 ± 0.73 |
+| `krabby random` | 3632.3 ± 284.5 | 3182.5 | 5362.4 | 5.76 ± 1.27 |
 
 ```ascii
-zigdex   ▓░░░░░░░░░  0.75ms  ← 5.3x faster than krabby
-pokeget  ▓▓░░░░░░░░  1.28ms
-krabby   ▓▓▓▓▓▓▓▓░░  3.95ms
+zigdex   ▓░░░░░░░░░  0.63ms  ← 5.8x faster than krabby
+pokeget  ▓▓░░░░░░░░  1.20ms
+krabby   ▓▓▓▓▓▓▓▓░░  3.63ms
 ```
 
 <sub>Benchmarked with `hyperfine --warmup 3`</sub>
