@@ -2,7 +2,7 @@
 
 # zigdex
 
-<img width="128" height="128" alt="zigdex-logo" src="https://github.com/user-attachments/assets/a19eb7f8-d363-4afe-af5e-ad46f87d02c1" />
+<img width="128" height="128" alt="zigdex-logo" src="https://github.com/user-attachments/assets/203c4298-687c-4c72-b2ed-791f5768bab8" />
 
 [![Zig](https://img.shields.io/badge/Zig-0.15.2-orange?logo=zig&logoColor=white)](https://ziglang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
