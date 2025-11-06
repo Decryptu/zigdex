@@ -68,6 +68,7 @@ This will:
 
 ```bash
 # Random Pokemon (1/128 chance for shiny)
+zigdex random
 zigdex --random
 
 # Specific Pokemon by name
@@ -80,11 +81,11 @@ zigdex 1 4 7
 
 # Force shiny variant
 zigdex pikachu --shiny
-zigdex --random --shiny
+zigdex random --shiny
 
 # Hide Pokemon name
 zigdex pikachu --hide-name
-zigdex --random --hide-name
+zigdex random --hide-name
 ```
 
 ## Shell Integration
