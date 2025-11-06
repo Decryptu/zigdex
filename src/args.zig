@@ -5,38 +5,37 @@ pub const Args = struct {
     random: bool = false,
     shiny: bool = false,
     hide_name: bool = false,
-    pokemon_names: std.ArrayList([]const u8),
-    allocator: std.mem.Allocator,
-
-    pub fn deinit(self: *Args) void {
-        self.pokemon_names.deinit(self.allocator);
-    }
+    pokemon_names: [16][]const u8 = undefined,
+    count: usize = 0,
 };
 
-pub fn parse(allocator: std.mem.Allocator) !Args {
-    var args_it = try std.process.argsWithAllocator(allocator);
-    defer args_it.deinit();
+pub fn parse() Args {
+    const args = std.os.argv;
 
-    _ = args_it.skip();
+    var result = Args{};
 
-    var result = Args{
-        .allocator = allocator,
-        .pokemon_names = std.ArrayList([]const u8).initCapacity(allocator, 8) catch |err| {
-            return err;
-        },
-    };
+    // Fast path: no arguments
+    if (args.len == 1) {
+        return result;
+    }
 
-    while (args_it.next()) |arg| {
-        if (std.mem.eql(u8, arg, "-h") or std.mem.eql(u8, arg, "--help")) {
-            result.help = true;
-        } else if (std.mem.eql(u8, arg, "-r") or std.mem.eql(u8, arg, "--random") or std.mem.eql(u8, arg, "random")) {
-            result.random = true;
-        } else if (std.mem.eql(u8, arg, "-s") or std.mem.eql(u8, arg, "--shiny")) {
-            result.shiny = true;
-        } else if (std.mem.eql(u8, arg, "--hide-name")) {
-            result.hide_name = true;
-        } else if (!std.mem.startsWith(u8, arg, "-")) {
-            try result.pokemon_names.append(allocator, arg);
+    // Parse without any allocations
+    for (args[1..]) |arg_ptr| {
+        const arg = std.mem.span(arg_ptr);
+
+        if (arg[0] == '-') {
+            if (std.mem.eql(u8, arg, "-h") or std.mem.eql(u8, arg, "--help")) {
+                result.help = true;
+            } else if (std.mem.eql(u8, arg, "-r") or std.mem.eql(u8, arg, "--random") or std.mem.eql(u8, arg, "random")) {
+                result.random = true;
+            } else if (std.mem.eql(u8, arg, "-s") or std.mem.eql(u8, arg, "--shiny")) {
+                result.shiny = true;
+            } else if (std.mem.eql(u8, arg, "--hide-name")) {
+                result.hide_name = true;
+            }
+        } else if (result.count < result.pokemon_names.len) {
+            result.pokemon_names[result.count] = arg;
+            result.count += 1;
         }
     }
 

@@ -4,7 +4,6 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    // Generate embedded sprites at compile time
     const gen_sprites = b.addExecutable(.{
         .name = "generate_sprites",
         .root_module = b.createModule(.{
@@ -25,6 +24,7 @@ pub fn build(b: *std.Build) void {
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
+            .single_threaded = true, // ADD THIS
         }),
     });
 

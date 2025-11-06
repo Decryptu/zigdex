@@ -1,47 +1,58 @@
 const std = @import("std");
 const embedded = @import("embedded_sprites");
 
+const Xorshift64 = struct {
+    state: u64,
+
+    fn init(seed: u64) Xorshift64 {
+        return .{ .state = if (seed == 0) 0x123456789abcdef0 else seed };
+    }
+
+    fn next(self: *Xorshift64) u64 {
+        var x = self.state;
+        x ^= x << 13;
+        x ^= x >> 7;
+        x ^= x << 17;
+        self.state = x;
+        return x;
+    }
+
+    fn range(self: *Xorshift64, max: usize) usize {
+        return @as(usize, @intCast(self.next() % max));
+    }
+};
+
 pub fn findPokemon(name: []const u8) ?*const embedded.Pokemon {
-    // Try by slug
-    for (&embedded.pokemon_list) |*pokemon| {
-        if (std.ascii.eqlIgnoreCase(pokemon.slug, name)) {
-            return pokemon;
-        }
-    }
-
-    // Try by name
-    for (&embedded.pokemon_list) |*pokemon| {
-        if (std.ascii.eqlIgnoreCase(pokemon.name, name)) {
-            return pokemon;
-        }
-    }
-
-    // Try by ID
+    // Try parsing as ID first (fastest check)
     if (std.fmt.parseInt(u16, name, 10)) |idx| {
         for (&embedded.pokemon_list) |*pokemon| {
-            if (pokemon.idx == idx) {
-                return pokemon;
-            }
+            if (pokemon.idx == idx) return pokemon;
         }
     } else |_| {}
+
+    // Linear search by slug
+    for (&embedded.pokemon_list) |*pokemon| {
+        if (std.ascii.eqlIgnoreCase(pokemon.slug, name)) return pokemon;
+    }
+
+    // Linear search by name
+    for (&embedded.pokemon_list) |*pokemon| {
+        if (std.ascii.eqlIgnoreCase(pokemon.name, name)) return pokemon;
+    }
 
     return null;
 }
 
-pub fn getSprite(pokemon: *const embedded.Pokemon, shiny: bool) []const u8 {
+inline fn getSprite(pokemon: *const embedded.Pokemon, shiny: bool) []const u8 {
     return if (shiny) pokemon.shiny_sprite else pokemon.regular_sprite;
 }
 
-pub fn displayRandom(allocator: std.mem.Allocator, force_shiny: bool, hide_name: bool) !void {
-    _ = allocator;
+pub fn displayRandom(force_shiny: bool, hide_name: bool) !void {
+    const seed = @as(u64, @bitCast(@as(i64, @truncate(std.time.nanoTimestamp()))));
+    var rng = Xorshift64.init(seed);
 
-    var prng = std.Random.DefaultPrng.init(@as(u64, @truncate(@as(u128, @bitCast(std.time.nanoTimestamp())))));
-    const random = prng.random();
-
-    // 1/128 chance for shiny if not forced
-    const is_shiny = force_shiny or (random.intRangeAtMost(u8, 1, 128) == 1);
-
-    const index = random.intRangeAtMost(usize, 0, embedded.pokemon_count - 1);
+    const is_shiny = force_shiny or (rng.next() % 128 == 0);
+    const index = rng.range(embedded.pokemon_count);
     const pokemon = &embedded.pokemon_list[index];
 
     try displayPokemon(pokemon, is_shiny, hide_name);
@@ -61,6 +72,5 @@ fn displayPokemon(pokemon: *const embedded.Pokemon, shiny: bool, hide_name: bool
         try stdout.writeAll(name_line);
     }
 
-    const sprite = getSprite(pokemon, shiny);
-    try stdout.writeAll(sprite);
+    try stdout.writeAll(getSprite(pokemon, shiny));
 }

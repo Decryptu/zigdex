@@ -2,3 +2,4 @@
 /.zig-cache
 assets/colorscripts/.DS_Store
 .DS_Store
+/zig-out
