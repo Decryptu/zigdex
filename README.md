@@ -126,7 +126,7 @@ zigdex/
 - The `generate_sprites.zig` tool runs during build
 - Creates `embedded_sprites.zig` with all Pokemon data
 - No runtime filesystem dependencies
-- Binary size: ~50-100MB (fully self-contained)
+- Binary size: ~18MB (fully self-contained; ~1.3MB gzip compressed)
 
 ### Fast Random Selection
 
