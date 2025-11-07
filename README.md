@@ -100,6 +100,8 @@ zigdex --random --hide-name
 alias fastfetch='zigdex --random --hide-name | command fastfetch --logo-type file-raw --logo -'
 ```
 
+*Note: [fastfetch](https://github.com/fastfetch-cli/fastfetch) is a fast system information tool similar to neofetch.*
+
 ## Project Structure
 
 ```tree
@@ -164,6 +166,15 @@ Supports multiple lookup methods:
 - Zig 0.15.2 or later
 - Terminal with ANSI color support
 - Pokemon sprite assets in `assets/` directory
+
+## Recommended Terminals
+
+For the best experience, we recommend using:
+
+- [iTerm2](https://iterm2.com/) - Works great with zigdex
+- [Ghostty](https://ghostty.org/) - Works great with zigdex
+
+Both terminals provide excellent ANSI color support and render Pokemon sprites beautifully.
 
 ## License
 
