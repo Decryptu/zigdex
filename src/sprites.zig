@@ -72,5 +72,14 @@ fn displayPokemon(pokemon: *const embedded.Pokemon, shiny: bool, hide_name: bool
         try stdout.writeAll(name_line);
     }
 
-    try stdout.writeAll(getSprite(pokemon, shiny));
+    // Decompress zlib-compressed sprite and write to stdout
+    const compressed = getSprite(pokemon, shiny);
+    var reader: std.Io.Reader = .fixed(compressed);
+    var decompress_buf: [std.compress.flate.max_window_len]u8 = undefined;
+    var decompress: std.compress.flate.Decompress = .init(&reader, .zlib, &decompress_buf);
+
+    var write_buf: [8192]u8 = undefined;
+    var file_writer = stdout.writerStreaming(&write_buf);
+    _ = try decompress.reader.streamRemaining(&file_writer.interface);
+    try file_writer.interface.flush();
 }
