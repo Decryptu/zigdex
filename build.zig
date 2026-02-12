@@ -8,7 +8,7 @@ pub fn build(b: *std.Build) void {
         .name = "generate_sprites",
         .root_module = b.createModule(.{
             .root_source_file = b.path("tools/generate_sprites.zig"),
-            .target = target,
+            .target = b.graph.host,
             .optimize = .ReleaseFast,
         }),
     });
