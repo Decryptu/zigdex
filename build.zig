@@ -8,10 +8,11 @@ pub fn build(b: *std.Build) void {
         .name = "generate_sprites",
         .root_module = b.createModule(.{
             .root_source_file = b.path("tools/generate_sprites.zig"),
-            .target = target,
+            .target = b.graph.host,
             .optimize = .ReleaseFast,
         }),
     });
+    gen_sprites.linkSystemLibrary("z");
 
     const run_gen = b.addRunArtifact(gen_sprites);
     run_gen.addFileArg(b.path("assets/pokemon.json"));
@@ -24,7 +25,7 @@ pub fn build(b: *std.Build) void {
             .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
-            .single_threaded = true, // ADD THIS
+            .single_threaded = true,
         }),
     });
 

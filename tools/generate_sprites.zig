@@ -1,4 +1,18 @@
 const std = @import("std");
+const c = @cImport({
+    @cInclude("zlib.h");
+});
+
+fn compressData(allocator: std.mem.Allocator, input: []const u8) ![]u8 {
+    var dest_len: c.uLongf = @intCast(c.compressBound(@intCast(input.len)));
+    const dest = try allocator.alloc(u8, @intCast(dest_len));
+
+    const ret = c.compress2(dest.ptr, &dest_len, input.ptr, @intCast(input.len), 9);
+    if (ret != c.Z_OK) return error.CompressionFailed;
+
+    // Resize to actual compressed size
+    return try allocator.realloc(dest, @intCast(dest_len));
+}
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -29,7 +43,6 @@ pub fn main() !void {
     defer output.deinit(allocator);
     const writer = output.writer(allocator);
 
-    try writer.writeAll("const std = @import(\"std\");\n\n");
     try writer.writeAll("pub const Pokemon = struct {\n");
     try writer.writeAll("    idx: u16,\n");
     try writer.writeAll("    slug: []const u8,\n");
@@ -39,6 +52,8 @@ pub fn main() !void {
     try writer.writeAll("};\n\n");
 
     var pokemon_count: usize = 0;
+    var total_raw: usize = 0;
+    var total_compressed: usize = 0;
 
     try writer.writeAll("pub const pokemon_list = [_]Pokemon{\n");
 
@@ -67,10 +82,20 @@ pub fn main() !void {
         };
         defer allocator.free(shiny_sprite);
 
+        // Compress sprites with zlib
+        const regular_compressed = try compressData(allocator, regular_sprite);
+        defer allocator.free(regular_compressed);
+
+        const shiny_compressed = try compressData(allocator, shiny_sprite);
+        defer allocator.free(shiny_compressed);
+
+        total_raw += regular_sprite.len + shiny_sprite.len;
+        total_compressed += regular_compressed.len + shiny_compressed.len;
+
         try writer.print("    .{{ .idx = {d}, .slug = \"{s}\", .name = \"{s}\",\n", .{ idx, slug, name_en });
 
         try writer.writeAll("      .regular_sprite = &[_]u8{");
-        for (regular_sprite, 0..) |byte, i| {
+        for (regular_compressed, 0..) |byte, i| {
             if (i > 0) try writer.writeAll(",");
             if (i % 16 == 0) try writer.writeAll("\n        ");
             try writer.print("{d}", .{byte});
@@ -78,7 +103,7 @@ pub fn main() !void {
         try writer.writeAll("\n      },\n");
 
         try writer.writeAll("      .shiny_sprite = &[_]u8{");
-        for (shiny_sprite, 0..) |byte, i| {
+        for (shiny_compressed, 0..) |byte, i| {
             if (i > 0) try writer.writeAll(",");
             if (i % 16 == 0) try writer.writeAll("\n        ");
             try writer.print("{d}", .{byte});
@@ -93,5 +118,10 @@ pub fn main() !void {
     try writer.print("pub const pokemon_count = {d};\n", .{pokemon_count});
 
     try std.fs.cwd().writeFile(.{ .sub_path = output_path, .data = output.items });
-    std.debug.print("Generated {d} Pokemon sprites\n", .{pokemon_count});
+    std.debug.print("Generated {d} Pokemon sprites (raw: {d} KB, compressed: {d} KB, ratio: {d:.1}x)\n", .{
+        pokemon_count,
+        total_raw / 1024,
+        total_compressed / 1024,
+        @as(f64, @floatFromInt(total_raw)) / @as(f64, @floatFromInt(total_compressed)),
+    });
 }
