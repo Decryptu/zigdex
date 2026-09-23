@@ -4,7 +4,7 @@
 
 <img width="128" height="128" alt="zigdex-logo" src="https://github.com/user-attachments/assets/203c4298-687c-4c72-b2ed-791f5768bab8" />
 
-[![Zig](https://img.shields.io/badge/Zig-0.15.2-orange?logo=zig&logoColor=white)](https://ziglang.org/)
+[![Zig](https://img.shields.io/badge/Zig-0.16.0-orange?logo=zig&logoColor=white)](https://ziglang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
@@ -39,7 +39,7 @@ krabby   ▓▓▓▓▓▓▓▓░░  3.63ms
 
 ## Installation
 
-### Homebrew (macOS/Linux)
+### Homebrew (macOS)
 
 ```bash
 brew tap Decryptu/tap
@@ -56,13 +56,14 @@ Download the appropriate binary for your architecture from the [releases page](h
 
 ```bash
 zig build
+zig build test
 ```
 
 This will:
 
 1. Generate embedded sprites from your `assets/` directory at compile time
 2. Create a single executable at `zig-out/bin/zigdex`
-3. Embed all 1010+ Pokemon sprites directly into the binary
+3. Embed all 1025 Pokemon sprites and 447 alternate forms directly into the binary
 
 ## Usage
 
@@ -128,11 +129,11 @@ zigdex/
 - The `generate_sprites.zig` tool runs during build
 - Creates `embedded_sprites.zig` with all Pokemon data
 - No runtime filesystem dependencies
-- Binary size: ~1.8MB (fully self-contained; sprites zlib-compressed)
+- Binary size: ~3MB (fully self-contained; sprites zlib-compressed)
 
 ### Fast Random Selection
 
-- Uses `std.Random.DefaultPrng` with nanosecond seed
+- Uses a small xorshift generator with a nanosecond clock seed
 - 1/128 chance for shiny (mimicking main series games)
 - O(1) lookup by index
 - Zero filesystem I/O at runtime
@@ -147,7 +148,7 @@ Supports multiple lookup methods:
 
 ### Memory Management
 
-- Uses `GeneralPurposeAllocator` for safety
+- Uses Zig's process allocator for sprite generation
 - Proper `defer` patterns for cleanup
 - No memory leaks in debug builds
 - Efficient argument parsing
@@ -163,7 +164,7 @@ Supports multiple lookup methods:
 
 ## Requirements
 
-- Zig 0.15.2 or later
+- Zig 0.16.x
 - Terminal with ANSI color support
 - Pokemon sprite assets in `assets/` directory
 
