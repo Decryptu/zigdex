@@ -547,7 +547,7 @@
       "zh_hans": "\u76ae\u5361\u4e18\u4eec\u628a\u5c3e\u5df4\n\u8d34\u5728\u4e00\u8d77\u4ea4\u6362\u7535\u6d41\uff0c\n\u5176\u5b9e\u662f\u5728\u4e92\u76f8\u6253\u62db\u547c\u3002",
       "zh_hant": "\u76ae\u5361\u4e18\u5011\u628a\u5c3e\u5df4\n\u8cbc\u5728\u4e00\u8d77\u4ea4\u63db\u96fb\u6d41\uff0c\n\u5176\u5be6\u662f\u5728\u4e92\u76f8\u6253\u62db\u547c\u3002"
     },
-    "forms": ["gmax"]
+    "forms": ["gmax", "alola-cap", "belle", "cosplay", "hoenn-cap", "kalos-cap", "libre", "original-cap", "partner-cap", "phd", "pop-star", "rock-star", "sinnoh-cap", "starter", "unova-cap", "world-cap"]
   },
   {
     "idx": 26,
@@ -1295,7 +1295,7 @@
       "zh_hans": "\u4ece\u53e4\u65f6\u5019\u8d77\u5c31\u662f\u4fd8\u83b7\u4e86\n\u4f17\u591a\u4eba\u5fc3\u7684\u7f8e\u4e3d\u5b9d\u53ef\u68a6\u3002\n\u80fd\u50cf\u98de\u4e00\u6837\u8f7b\u5de7\u5730\u5954\u8dd1\u3002",
       "zh_hant": "\u5f9e\u53e4\u6642\u5019\u8d77\u5c31\u662f\u64c4\u7372\n\u773e\u591a\u4eba\u5fc3\u7684\u7f8e\u9e97\u5bf6\u53ef\u5922\u3002\n\u80fd\u50cf\u98db\u4e00\u6a23\u8f15\u76c8\u5730\u5954\u8dd1\u3002"
     },
-    "forms": ["hisui"]
+    "forms": ["hisui", "hisui-noble"]
   },
   {
     "idx": 60,
@@ -2219,7 +2219,7 @@
       "zh_hans": "\u53ea\u8981\u53d7\u5230\u4e00\u70b9\u649e\u51fb\uff0c\n\u5c31\u4f1a\u7531\u4e8e\u4f53\u5185\u7684\n\u7535\u80fd\u6ea2\u51fa\u5bfc\u81f4\u7206\u70b8\u3002",
       "zh_hant": "\u53ea\u8981\u53d7\u5230\u4efb\u4f55\u4e00\u9ede\u885d\u64ca\uff0c\n\u9ad4\u5167\u7684\u96fb\u80fd\u5c31\u6703\u8fc5\u901f\u81a8\u8139\n\u7136\u5f8c\u7206\u70b8\u3002"
     },
-    "forms": ["hisui"]
+    "forms": ["hisui", "hisui-noble"]
   },
   {
     "idx": 102,
@@ -2813,7 +2813,7 @@
       "zh_hans": "\u6816\u606f\u5728\u4f3d\u52d2\u5c14\u7684\u80af\u6cf0\u7f57\n\u6027\u683c\u66b4\u8e81\uff0c\u51b3\u4e0d\u5141\u8bb8\n\u4eba\u7c7b\u9a91\u5728\u81ea\u5df1\u7684\u80cc\u4e0a\u3002",
       "zh_hant": "\u68f2\u606f\u5728\u4f3d\u52d2\u723e\u7684\u80af\u6cf0\u7f85\n\u6027\u683c\u66b4\u8e81\uff0c\u7d55\u4e0d\u6703\u5141\u8a31\n\u4eba\u985e\u9a0e\u5230\u81ea\u5df1\u7684\u80cc\u4e0a\u3002"
     },
-    "forms": ["paldea"]
+    "forms": ["paldea", "paldea-combat-breed", "paldea-blaze-breed", "paldea-aqua-breed"]
   },
   {
     "idx": 129,
@@ -2923,7 +2923,7 @@
       "zh_hans": "\u7531\u4e8e\u4e0d\u7a33\u5b9a\u7684\u9057\u4f20\u57fa\u56e0\uff0c\n\u8574\u542b\u7740\u5404\u79cd\u5404\u6837\u8fdb\u5316\n\u53ef\u80fd\u6027\u7684\u7279\u6b8a\u5b9d\u53ef\u68a6\u3002",
       "zh_hant": "\u7531\u65bc\u4e0d\u7a69\u5b9a\u7684\u57fa\u56e0\uff0c\n\u860a\u542b\u8457\u5404\u5f0f\u5404\u6a23\u9032\u5316\n\u53ef\u80fd\u6027\u7684\u7279\u6b8a\u5bf6\u53ef\u5922\u3002"
     },
-    "forms": ["gmax"]
+    "forms": ["gmax", "starter"]
   },
   {
     "idx": 134,
@@ -3759,7 +3759,7 @@
       "zh_hans": "\u8138\u988a\u4e0a\u7684\u7535\u56ca\u8fd8\u5f88\u5c0f\uff0c\n\u5982\u679c\u56ca\u91cc\u7684\u7535\u592a\u591a\u4e86\uff0c\n\u5c31\u4f1a\u6f0f\u51fa\u6765\u7535\u5230\u81ea\u5df1\u3002",
       "zh_hant": "\u81c9\u9830\u4e0a\u7684\u96fb\u56ca\u9084\u5f88\u5c0f\uff0c\n\u5982\u679c\u56ca\u88e1\u7684\u96fb\u592a\u591a\u4e86\uff0c\n\u5c31\u6703\u6f0f\u51fa\u4f86\u96fb\u5230\u81ea\u5df1\u3002"
     },
-    "forms": []
+    "forms": ["spiky-eared"]
   },
   {
     "idx": 173,
@@ -4383,7 +4383,7 @@
       "de": "Icognito hat die Form antiker Schriftzeichen. Bis heute ist\nunklar, was zuerst da war \u2013 die antiken Schriftzeichen oder\ndie vielen unterschiedlichen Icognito. Trotz umfangreicher\nForschung bleiben Fragen offen.",
       "ja": "\u53e4\u4ee3\u306e\u3000\u6587\u5b57\u306b\u3000\u4f3c\u305f\u3000\u59ff\u306e\u3000\u30dd\u30b1\u30e2\u30f3\u3002\n\u5148\u306b\u3000\u751f\u307e\u308c\u305f\u306e\u306f\u3000\u6587\u5b57\u304b\u3000\u30a2\u30f3\u30ce\u30fc\u30f3\u306a\u306e\u304b\u3002\n\u7814\u7a76\u4e2d\u3060\u304c\u3000\u3044\u307e\u3060\u306b\u3000\u8b0e\u3067\u3042\u308b\u3002"
     },
-    "forms": []
+    "forms": ["b", "c", "d", "e", "exclamation", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "question", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
   },
   {
     "idx": 202,
@@ -5413,7 +5413,7 @@
       "de": "Lugias Fl\u00fcgel haben eine zerst\u00f6rerische Kraft. Bereits ein\nleichtes Flattern kann H\u00e4user hinfortwehen. Daher hat sich\ndieses Pok\u00e9mon daf\u00fcr entschieden, tief unten im Meer zu\nleben, wo es niemand sieht.",
       "ja": "\u7ffc\u3092\u3000\u8efd\u304f\u3000\u7fbd\u3070\u305f\u304b\u305b\u305f\u3000\u3060\u3051\u3067\u3000\u6c11\u5bb6\u3092\n\u5439\u304d\u98db\u3070\u3059\u3000\u7834\u58ca\u529b\u3092\u3000\u6301\u3063\u3066\u3044\u308b\u3000\u305f\u3081\u306b\n\u6d77\u5e95\u3067\u3000\u4eba\u77e5\u308c\u305a\u3000\u66ae\u3089\u3059\u3000\u3088\u3046\u306b\u3000\u306a\u3063\u305f\u3002"
     },
-    "forms": []
+    "forms": ["shadow"]
   },
   {
     "idx": 250,
@@ -7053,7 +7053,7 @@
       "zh_hans": "\u6bcf\u4e00\u53ea\u8eab\u4e0a\u7684\u6591\u70b9\u82b1\u7eb9\u90fd\u4e0d\u540c\u3002\n\u4f1a\u7528\u6643\u6643\u60a0\u60a0\u7684\u52a8\u4f5c\n\u7edd\u5999\u5730\u8eb2\u907f\u5bf9\u624b\u7684\u653b\u51fb\u3002",
       "zh_hant": "\u6bcf\u4e00\u96bb\u8eab\u4e0a\u7684\u6591\u9ede\u90fd\u4e0d\u4e00\u6a23\u3002\n\u6703\u7528\u6416\u6416\u6643\u6643\u7684\u52d5\u4f5c\n\u5de7\u5999\u5730\u907f\u958b\u5c0d\u624b\u7684\u653b\u64ca\u3002"
     },
-    "forms": []
+    "forms": ["blank", "filled"]
   },
   {
     "idx": 328,
@@ -7573,7 +7573,7 @@
       "zh_hans": "\u6837\u5b50\u4f1a\u6839\u636e\u5929\u6c14\u53d1\u751f\u53d8\u5316\u3002\n\u5929\u6c14\u8d8a\u6076\u52a3\uff0c\n\u6027\u683c\u4e5f\u4f1a\u53d8\u5f97\u8d8a\u66b4\u8e81\u3002",
       "zh_hant": "\u6a23\u5b50\u6703\u96a8\u8457\u5929\u6c23\u800c\u8b8a\u5316\u3002\n\u5929\u6c23\u8d8a\u662f\u60e1\u52a3\uff0c\n\u6027\u60c5\u5c31\u6703\u8b8a\u5f97\u8d8a\u7c97\u66b4\u3002"
     },
-    "forms": []
+    "forms": ["rainy", "snowy", "sunny"]
   },
   {
     "idx": 352,
@@ -8247,7 +8247,7 @@
       "de": "Es hei\u00dft, Kyogre sei die Personifizierung des Meeres.\nLegenden zufolge hat es in seinem Bestreben, sich die\nNaturenergie anzueignen, viele Male gegen Groudon gek\u00e4mpft.",
       "ja": "\u6d77\u306e\u3000\u5316\u8eab\u3000\u3068 \u4f1d\u308f\u308b\u3000\u30dd\u30b1\u30e2\u30f3\u3002\n\u81ea\u7136\u306e\u30a8\u30cd\u30eb\u30ae\u30fc\u3092\u3000\u6c42\u3081\u3066\u3000\u30b0\u30e9\u30fc\u30c9\u30f3\u3068\n\u4e89\u3044\u3092\u3000\u7e70\u308a\u8fd4\u3057\u305f\u3068\u3044\u3046\u3000\u4f1d\u8aac\u304c\u3000\u3042\u308b\u3002"
     },
-    "forms": []
+    "forms": ["primal"]
   },
   {
     "idx": 383,
@@ -8267,7 +8267,7 @@
       "de": "Mithilfe von Naturenergie kann es eine Protomorphose\ndurchf\u00fchren und so seine urspr\u00fcngliche Form zur\u00fcckerlangen.\nDadurch kann es Magma hervorbringen und\ndie Landmasse vergr\u00f6\u00dfern.",
       "ja": "\u81ea\u7136\u306e\u30a8\u30cd\u30eb\u30ae\u30fc\u306b\u3000\u3088\u3063\u3066\u3000\u30b2\u30f3\u30b7\u30ab\u30a4\u30ad\u3057\n\u672c\u6765\u306e\u3000\u59ff\u3092\u3000\u53d6\u308a\u623b\u3059\u3002\u305d\u306e\u529b\u306f\n\u30de\u30b0\u30de\u3092\u3000\u751f\u307f\u3060\u3057\u3000\u5927\u5730\u3092\u3000\u5e83\u3052\u308b\u3002"
     },
-    "forms": []
+    "forms": ["primal"]
   },
   {
     "idx": 384,
@@ -8329,7 +8329,7 @@
       "de": "Deoxys ging aus einem Virus aus dem Weltraum hervor.\nEs ist sehr intelligent und nutzt psychokinetische Energie.\nDieses Pok\u00e9mon verschie\u00dft Laserstrahlen aus einem\nkristallartigen Organ auf seinem Brustkorb.",
       "ja": "\u5b87\u5b99\u30a6\u30a3\u30eb\u30b9\u304b\u3089\u3000\u8a95\u751f\u3057\u305f\u3000\u30dd\u30b1\u30e2\u30f3\u3002\n\u77e5\u80fd\u304c\u3000\u9ad8\u304f\u3000\u8d85\u80fd\u529b\u3092\u3000\u64cd\u308b\u3002\n\u80f8\u306e\u3000\u6c34\u6676\u4f53\u304b\u3089\u3000\u30ec\u30fc\u30b6\u30fc\u3092\u3000\u51fa\u3059\u3002"
     },
-    "forms": []
+    "forms": ["attack", "defense", "speed"]
   },
   {
     "idx": 387,
@@ -8867,7 +8867,7 @@
       "de": "Wird sein Umhang im Kampf zerst\u00f6rt, macht es sich schnell\naus dem, was es findet, einen neuen.",
       "ja": "\u6226\u3044\u3067\u3000\u30df\u30ce\u304c\u3000\u58ca\u308c\u3066\u3057\u307e\u3046\u3068\n\u8fd1\u304f\u306b\u3042\u308b\u3000\u6750\u6599\u3067\n\u30df\u30ce\u3092\u3000\u3059\u3050\u306b\u3000\u4f5c\u308a\u76f4\u3059\u3002"
     },
-    "forms": []
+    "forms": ["sandy", "trash"]
   },
   {
     "idx": 413,
@@ -8887,7 +8887,7 @@
       "de": "Als sich Burmy entwickelte, wurde sein Umhang Teil\ndes K\u00f6rpers. Es legt den Umhang niemals ab.",
       "ja": "\u30df\u30ce\u30e0\u30c3\u30c1\u304b\u3089\u3000\u9032\u5316\u3057\u305f\u3068\u304d\n\u30df\u30ce\u304c\u3000\u4f53\u306e\u3000\u4e00\u90e8\u306b\u3000\u306a\u3063\u305f\u3002\n\u4e00\u751f\u3000\u30df\u30ce\u3092\u3000\u8131\u3050\u3053\u3068\u306f\u306a\u3044\u3002"
     },
-    "forms": []
+    "forms": ["sandy", "trash"]
   },
   {
     "idx": 414,
@@ -9055,7 +9055,7 @@
       "zh_hans": "\u76d6\u8d77\u6765\u7684\u82b1\u74e3\u5f88\u786c\u3002\n\u5373\u4f7f\u88ab\u9e1f\u5b9d\u53ef\u68a6\u5544\u5230\uff0c\n\u4e5f\u5b8c\u5168\u6ca1\u95ee\u9898\u3002",
       "zh_hant": "\u95d4\u8d77\u4f86\u7684\u82b1\u74e3\u5f88\u786c\u3002\n\u5373\u4f7f\u88ab\u9ce5\u5bf6\u53ef\u5922\u5544\u5230\uff0c\n\u4e5f\u5b8c\u5168\u6c92\u554f\u984c\u3002"
     },
-    "forms": []
+    "forms": ["sunshine"]
   },
   {
     "idx": 422,
@@ -9077,7 +9077,7 @@
       "zh_hans": "\u5982\u679c\u7528\u529b\u6309\u4f4f\u5b83\uff0c\n\u5b83\u5c31\u4f1a\u5206\u6ccc\u51fa\u795e\u79d8\u7684\u7d2b\u8272\u6db2\u4f53\u3002\n\u867d\u7136\u6db2\u4f53\u65e0\u5bb3\uff0c\u4e0d\u8fc7\u9ecf\u7cca\u7cca\u7684\u3002",
       "zh_hant": "\u5982\u679c\u7528\u529b\u6309\u4f4f\u7260\uff0c\n\u7260\u5c31\u6703\u5206\u6ccc\u51fa\u795e\u79d8\u7684\u7d2b\u8272\u6db2\u9ad4\u3002\n\u96d6\u7136\u6db2\u9ad4\u7121\u5bb3\uff0c\u4e0d\u904e\u9ecf\u7cca\u7cca\u7684\u3002"
     },
-    "forms": []
+    "forms": ["east"]
   },
   {
     "idx": 423,
@@ -9099,7 +9099,7 @@
       "zh_hans": "\u8eab\u4f53\u8f6f\u762b\u762b\u7684\u4f46\u5341\u5206\u5f3a\u97e7\u3002\n\u56e0\u4e3a\u5b83\u8eab\u4f53\u7684\u8f6f\u5ea6\u53ef\u4ee5\n\u5e2e\u52a9\u5206\u6563\u5b83\u6240\u53d7\u5230\u7684\u51b2\u51fb\u3002",
       "zh_hant": "\u8eab\u9ad4\u8edf\u7dbf\u7dbf\u7684\u4f46\u5341\u5206\u5f37\u97cc\u3002\n\u56e0\u70ba\u7260\u8eab\u9ad4\u7684\u8edf\u5ea6\u53ef\u4ee5\n\u5e6b\u52a9\u7260\u5206\u6563\u6240\u53d7\u5230\u7684\u885d\u64ca\u3002"
     },
-    "forms": []
+    "forms": ["east"]
   },
   {
     "idx": 424,
@@ -10317,7 +10317,7 @@
       "zh_hans": "\u4f1a\u7528\u7531\u79bb\u5b50\u6784\u6210\u7684\u8eab\u4f53\n\u6f5c\u5165\u5404\u79cd\u5404\u6837\u7684\u673a\u5668\u91cc\u3002\n\u6700\u559c\u6b22\u6076\u4f5c\u5267\u5413\u4eba\u3002",
       "zh_hant": "\u6703\u7528\u7b49\u96e2\u5b50\u69cb\u6210\u7684\u8eab\u9ad4\n\u6f5b\u5165\u5404\u5f0f\u5404\u6a23\u7684\u6a5f\u5668\u88e1\u3002\n\u6700\u559c\u6b61\u60e1\u4f5c\u5287\u5687\u4eba\u3002"
     },
-    "forms": []
+    "forms": ["fan", "frost", "heat", "mow", "wash"]
   },
   {
     "idx": 480,
@@ -10397,7 +10397,7 @@
       "de": "Es besitzt die Macht, die Zeit zu kontrollieren. In den Mythen\nvon Sinnoh erscheint es als Gottheit.",
       "ja": "\u6642\u9593\u3092\u3000\u64cd\u308b\u3000\u529b\u3092\u3000\u6301\u3064\u3002\n\u30b7\u30f3\u30aa\u30a6\u5730\u65b9\u3067\u306f\u3000\u795e\u69d8\u3068\u3000\u547c\u3070\u308c\n\u795e\u8a71\u306b\u3000\u767b\u5834\u3059\u308b\u3002"
     },
-    "forms": []
+    "forms": ["origin"]
   },
   {
     "idx": 484,
@@ -10417,7 +10417,7 @@
       "de": "Es hat die Macht, den Raum zu kr\u00fcmmen. In den Mythen\nvon Sinnoh erscheint es als Gottheit.",
       "ja": "\u7a7a\u9593\u3092\u3000\u3086\u304c\u3081\u308b\u3000\u80fd\u529b\u3092\u3000\u6301\u3061\n\u30b7\u30f3\u30aa\u30a6\u5730\u65b9\u306e\u3000\u795e\u8a71\u3067\u306f\n\u795e\u69d8\u3068\u3057\u3066\u3000\u63cf\u304b\u308c\u3066\u3044\u308b\u3002"
     },
-    "forms": []
+    "forms": ["origin"]
   },
   {
     "idx": 485,
@@ -10479,7 +10479,7 @@
       "de": "Es wurde aufgrund seines Verhaltens verbannt.\nAus der Zerrwelt schaut es auf die alte Welt.",
       "ja": "\u66b4\u308c\u8005\u3000\u3086\u3048\u3000\u8ffd\u3044\u51fa\u3055\u308c\u305f\u304c\n\u7834\u308c\u305f\u4e16\u754c\u3068\u3000\u8a00\u308f\u308c\u308b\u3000\u5834\u6240\u3067\n\u9759\u304b\u306b\u3000\u5143\u306e\u4e16\u754c\u3092\u3000\u898b\u3066\u3044\u305f\u3002"
     },
-    "forms": []
+    "forms": ["origin"]
   },
   {
     "idx": 488,
@@ -10579,7 +10579,7 @@
       "de": "Es hei\u00dft, wenn die Gracidea bl\u00fchen, dr\u00fcckt es seine\nDankbarkeit aus, indem es hoch in die L\u00fcfte fliegt.",
       "ja": "\u30b0\u30e9\u30b7\u30c7\u30a2\u306e\u82b1\u304c\u3000\u54b2\u304f\u3000\u5b63\u7bc0\n\u611f\u8b1d\u306e\u3000\u5fc3\u3092\u3000\u5c4a\u3051\u308b\u305f\u3081\u306b\n\u98db\u3073\u7acb\u3064\u3068\u3000\u8a00\u308f\u308c\u3066\u3044\u308b\u3002"
     },
-    "forms": []
+    "forms": ["sky"]
   },
   {
     "idx": 493,
@@ -10599,7 +10599,7 @@
       "de": "Die Mythologie erz\u00e4hlt, dass dieses Pok\u00e9mon geboren wurde,\nbevor das Universum \u00fcberhaupt existierte.",
       "ja": "\u5b87\u5b99\u304c\u3000\u307e\u3060\u3000\u306a\u3044\u3000\u3053\u308d\u306b\n\u6700\u521d\u306b\u3000\u751f\u307e\u308c\u305f\u3000\u30dd\u30b1\u30e2\u30f3\u3068\n\u795e\u8a71\u306e\u3000\u4e2d\u3067\u3000\u8a9e\u3089\u308c\u3066\u3044\u308b\u3002"
     },
-    "forms": []
+    "forms": ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "poison", "psychic", "rock", "steel", "unknown", "water"]
   },
   {
     "idx": 494,
@@ -11785,7 +11785,7 @@
       "zh_hans": "\u7528\u5b83\u7684\u82b1\u6735\u5236\u6210\u7684\u7cbe\u6cb9\n\u867d\u6709\u7740\u6781\u81f4\u9999\u6c14\uff0c\u4f46\u4ef7\u683c\n\u540c\u65f6\u4e5f\u8d35\u5f97\u4ee4\u4eba\u5927\u8dcc\u773c\u955c\u3002",
       "zh_hant": "\u7531\u7260\u7684\u82b1\u6735\u63d0\u7149\u7684\u7cbe\u6cb9\u6709\u8457\n\u6975\u81f4\u7684\u9999\u6c23\uff0c\u4f46\u50f9\u683c\u540c\u6642\u4e5f\n\u662f\u8cb4\u5f97\u4ee4\u4eba\u773c\u775b\u5e7e\u4e4e\u8981\u6389\u51fa\u4f86\u3002"
     },
-    "forms": ["hisui"]
+    "forms": ["hisui", "hisui-noble"]
   },
   {
     "idx": 550,
@@ -11807,7 +11807,7 @@
       "zh_hans": "\u4ece\u524d\u4e5f\u66fe\u7ecf\u767b\u4e0a\u9910\u684c\u3002\n\u7ea2\u6761\u7eb9\u91ce\u86ee\u9c88\u9c7c\u7684\u8089\u8102\u80aa\u542b\u91cf\u9ad8\uff0c\n\u9002\u5408\u5e74\u8f7b\u4eba\u98df\u7528\u3002",
       "zh_hant": "\u5f9e\u524d\u4e5f\u66fe\u7d93\u767b\u4e0a\u9910\u684c\u3002\n\u7d05\u689d\u7d0b\u91ce\u883b\u9c78\u9b5a\u7684\u8089\u8102\u80aa\u542b\u91cf\u9ad8\uff0c\n\u9069\u5408\u5e74\u8f15\u4eba\u98df\u7528\u3002"
     },
-    "forms": []
+    "forms": ["blue-striped", "white-striped"]
   },
   {
     "idx": 551,
@@ -11917,7 +11917,7 @@
       "zh_hans": "\u4f53\u5185\u7684\u706b\u7130\u71c3\u5f97\u8d8a\u65fa\uff0c\n\u529b\u91cf\u5c31\u8d8a\u5927\u3002\u706b\u7130\u7684\u6e29\u5ea6\n\u6709\u65f6\u751a\u81f3\u80fd\u8d85\u8fc7\uff11\uff14\uff10\uff10\u5ea6\u3002",
       "zh_hant": "\u9ad4\u5167\u7684\u706b\u7130\u71c3\u5f97\u8d8a\u65fa\uff0c\n\u529b\u91cf\u5c31\u8d8a\u5927\u3002\u706b\u7130\u7684\u6eab\u5ea6\n\u6709\u6642\u751a\u81f3\u80fd\u8d85\u904e\uff11\uff14\uff10\uff10\u5ea6\u3002"
     },
-    "forms": ["galar"]
+    "forms": ["galar", "galar-zen", "zen"]
   },
   {
     "idx": 556,
@@ -12571,7 +12571,7 @@
       "de": "Sein Fell und sein Geruch \u00e4ndern sich mit dem Wechsel\nder Jahreszeiten. Es ist der Bote des Saisonwechsels.",
       "ja": "\u5b63\u7bc0\u306e\u3000\u5909\u308f\u308a\u76ee\u306b\u3000\u306a\u308b\u3068\n\u4f53\u6bdb\u3068\u3000\u306b\u304a\u3044\u304c\u3000\u5909\u5316\u3059\u308b\u3002\n\u5b63\u7bc0\u3092\u3000\u544a\u3052\u308b\u3000\u30dd\u30b1\u30e2\u30f3\u3002"
     },
-    "forms": []
+    "forms": ["autumn", "summer", "winter"]
   },
   {
     "idx": 586,
@@ -12591,7 +12591,7 @@
       "de": "Mancherorts sagt man, sie br\u00e4chten den Fr\u00fchling, da sie je\nnach Jahreszeit ihr Revier wechseln.",
       "ja": "\u5b63\u7bc0\u306e\u3000\u79fb\u308a\u5909\u308f\u308a\u3068\u3000\u3068\u3082\u306b\n\u4f4f\u51e6\u3092\u3000\u5909\u3048\u308b\u306e\u3067\u3000\u30e1\u30d6\u30ad\u30b8\u30ab\u304c\n\u6625\u3092\u904b\u3076\u3068\u3000\u3044\u3046\u3000\u4eba\u3082\u3044\u308b\u3002"
     },
-    "forms": []
+    "forms": ["autumn", "summer", "winter"]
   },
   {
     "idx": 587,
@@ -13899,7 +13899,7 @@
       "zh_hans": "\u4e3a\u4e86\u7a33\u5b9a\u7ec6\u80de\u7ec4\u7ec7\uff0c\n\u5b83\u4f3c\u4e4e\u7528\u81ea\u5df1\u5236\u9020\u51fa\n\u7684\u51b7\u6c14\u51b0\u51bb\u7740\u8eab\u4f53\u3002",
       "zh_hant": "\u70ba\u4e86\u7a69\u5b9a\u7d30\u80de\u7d44\u7e54\uff0c\n\u7260\u4f3c\u4e4e\u7528\u81ea\u5df1\u88fd\u9020\u51fa\n\u7684\u51b7\u6c23\u51b0\u51cd\u8457\u8eab\u9ad4\u3002"
     },
-    "forms": []
+    "forms": ["black", "white"]
   },
   {
     "idx": 647,
@@ -13921,7 +13921,7 @@
       "zh_hans": "\u636e\u8bf4\u5f53\u5b83\u633a\u8fc7\u4e86\u8270\u96be\u7684\u6218\u6597\uff0c\n\u989d\u5934\u4e0a\u7684\u89d2\u5c31\u80fd\u5f97\u5230\u953b\u70bc\uff0c\n\u4ece\u800c\u6fc0\u53d1\u51fa\u81ea\u5df1\u771f\u6b63\u7684\u529b\u91cf\u3002",
       "zh_hant": "\u64da\u8aaa\u7576\u7260\u6b77\u7d93\u8271\u96e3\u7684\u6230\u9b25\uff0c\n\u85c9\u6b64\u935b\u934a\u4e86\u984d\u982d\u4e0a\u7684\u89d2\u4e4b\u5f8c\uff0c\n\u5c31\u80fd\u6fc0\u767c\u51fa\u81ea\u5df1\u771f\u6b63\u7684\u529b\u91cf\u3002"
     },
-    "forms": []
+    "forms": ["resolute"]
   },
   {
     "idx": 648,
@@ -13941,7 +13941,7 @@
       "de": "Wer die Melodie h\u00f6rt, die es in einer speziellen Stimmlage\nvon sich gibt, steht voll in seinem Bann.",
       "ja": "\u7279\u6b8a\u306a\u3000\u767a\u58f0\u6cd5\u3067\u3000\u6b4c\u3046\u3000\u30e1\u30ed\u30c7\u30a3\u306f\n\u805e\u3044\u305f\u8005\u306e\u3000\u611f\u60c5\u3092\n\u81ea\u5728\u306b\u3000\u64cd\u308b\u3002"
     },
-    "forms": []
+    "forms": ["pirouette"]
   },
   {
     "idx": 649,
@@ -13961,7 +13961,7 @@
       "de": "Es lebte vor 300 Millionen Jahren. Team Plasma modifizierte\nes und pflanzte ihm am R\u00fccken eine Kanone ein.",
       "ja": "\uff13\u5104\u5e74\u524d\u306b\u3000\u3044\u305f\u3000\u30dd\u30b1\u30e2\u30f3\u3002\n\u30d7\u30e9\u30ba\u30de\u56e3\u306b\u3000\u6539\u9020\u3000\u3055\u308c\n\u80cc\u4e2d\u306b\u3000\u7832\u53f0\u3092\u3000\u3064\u3051\u3089\u308c\u305f\u3002"
     },
-    "forms": []
+    "forms": ["burn", "chill", "douse", "shock"]
   },
   {
     "idx": 650,
@@ -14141,7 +14141,7 @@
       "de": "Kaum hat man es ersp\u00e4ht, verschwindet es auch schon wieder.\nMit der Agilit\u00e4t eines Ninjas verwirrt es seine Gegner, um sie\ndann mit Wasser-Shuriken anzugreifen.",
       "ja": "\u5fcd\u8005\u306e\u3088\u3046\u306b\u3000\u795e\u51fa\u9b3c\u6ca1\u3002\n\u7d20\u65e9\u3044\u3000\u52d5\u304d\u3067\u3000\u7ffb\u5f04\u3057\u3064\u3064\n\u6c34\u306e\u3000\u624b\u88cf\u5263\u3067\u3000\u5207\u308a\u88c2\u304f\u3002"
     },
-    "forms": []
+    "forms": ["ash"]
   },
   {
     "idx": 659,
@@ -14311,7 +14311,7 @@
       "de": "Je nach Klima und geographischer Beschaffenheit seines\nHabitats \u00e4ndert sich die Musterung seiner Fl\u00fcgel. Es verstreut\nbunten Fl\u00fcgelstaub.",
       "ja": "\u4f4f\u3093\u3067\u3044\u308b\u3000\u6c17\u5019\u3084\u3000\u98a8\u571f\u306b\u3088\u3063\u3066\n\u7fbd\u306e\u3000\u6a21\u69d8\u304c\u3000\u9055\u3046\u3000\u30dd\u30b1\u30e2\u30f3\u3002\n\u8272\u9bae\u3084\u304b\u306a\u3000\u308a\u3093\u3077\u3093\u3092\u3000\u307e\u304f\u3002"
     },
-    "forms": []
+    "forms": ["archipelago", "continental", "elegant", "fancy", "garden", "high-plains", "icy-snow", "jungle", "marine", "modern", "monsoon", "ocean", "poke-ball", "polar", "river", "sandstorm", "savanna", "sun", "tundra"]
   },
   {
     "idx": 667,
@@ -14399,7 +14399,7 @@
       "zh_hans": "\u628a\u81ea\u5df1\u7684\u529b\u91cf\u7ed9\u82b1\uff0c\u7528\u5fc3\u5730\u7167\u6599\u3002\n\u7edd\u4e0d\u539f\u8c05\u90a3\u4e9b\u7834\u574f\u82b1\u575b\u8005\u3002",
       "zh_hant": "\u6703\u628a\u81ea\u5df1\u7684\u529b\u91cf\u5206\u7d66\u82b1\uff0c\n\u7528\u5fc3\u5730\u52a0\u4ee5\u7167\u6599\u3002\n\u7d55\u4e0d\u6703\u539f\u8ad2\u7834\u58de\u82b1\u58c7\u7684\u50a2\u4f19\u3002"
     },
-    "forms": []
+    "forms": ["blue", "eternal", "orange", "white", "yellow"]
   },
   {
     "idx": 671,
@@ -14421,7 +14421,7 @@
       "zh_hans": "\u62e5\u6709\u51e0\u767e\u5e74\u7684\u5bff\u547d\u3002\n\u636e\u8bf4\u4f1a\u7ec8\u5176\u4e00\u751f\u4e0d\u65ad\u5730\u5b88\u62a4\u7740\u5ead\u56ed\u3002",
       "zh_hant": "\u64c1\u6709\u6578\u767e\u5e74\u7684\u58fd\u547d\u3002\n\u64da\u8aaa\u7260\u7d42\u5176\u4e00\u751f\u90fd\u6703\n\u4e0d\u65b7\u5b88\u8b77\u8457\u5ead\u5712\u3002"
     },
-    "forms": []
+    "forms": ["blue", "orange", "white", "yellow"]
   },
   {
     "idx": 672,
@@ -14527,7 +14527,7 @@
       "zh_hans": "\u5982\u679c\u7f6e\u4e4b\u4e0d\u7406\uff0c\n\u4f53\u6bdb\u4f1a\u4e0d\u65ad\u5730\u957f\u957f\uff0c\n\u4f46\u53ea\u5141\u8bb8\u4fe1\u8d56\u7684\u4eba\u4fee\u526a\u3002",
       "zh_hant": "\u5982\u679c\u653e\u8457\u4e0d\u7ba1\uff0c\u9ad4\u6bdb\u5c31\u6703\n\u4e0d\u65b7\u8b8a\u9577\uff0c\u4f46\u7260\u53ea\u5141\u8a31\n\u4fe1\u8cf4\u7684\u4eba\u5e6b\u81ea\u5df1\u4fee\u526a\u3002"
     },
-    "forms": []
+    "forms": ["dandy", "debutante", "diamond", "heart", "kabuki", "la-reine", "matron", "pharaoh", "star"]
   },
   {
     "idx": 677,
@@ -14637,7 +14637,7 @@
       "zh_hans": "\u575a\u76fe\u5251\u602a\u66fe\u7ecf\u7528\u5f3a\u5927\u7684\u7075\u529b\n\u63a7\u5236\u4eba\u548c\u5b9d\u53ef\u68a6\uff0c\u5efa\u7acb\u4e86\n\u9002\u5408\u81ea\u5df1\u751f\u6d3b\u7684\u56fd\u5bb6\u3002",
       "zh_hant": "\u5805\u76fe\u528d\u602a\u66fe\u7d93\u7528\u5f37\u5927\u7684\u9748\u529b\n\u63a7\u5236\u4eba\u548c\u5bf6\u53ef\u5922\uff0c\u5efa\u7acb\u4e86\n\u9069\u5408\u81ea\u5df1\u751f\u6d3b\u7684\u570b\u5bb6\u3002"
     },
-    "forms": []
+    "forms": ["blade"]
   },
   {
     "idx": 682,
@@ -15275,7 +15275,7 @@
       "zh_hans": "\u5357\u74dc\u7684\u6d1e\u91cc\u53d1\u51fa\u7684\u5149\n\u4f1a\u50ac\u7720\u5e76\u63a7\u5236\n\u770b\u5230\u5b83\u7684\u4eba\u548c\u5b9d\u53ef\u68a6\u3002",
       "zh_hant": "\u5357\u74dc\u7684\u6d1e\u88e1\u767c\u51fa\u7684\u5149\n\u6703\u50ac\u7720\u4e26\u63a7\u5236\n\u770b\u5230\u7260\u7684\u4eba\u548c\u5bf6\u53ef\u5922\u3002"
     },
-    "forms": []
+    "forms": ["large", "small", "super"]
   },
   {
     "idx": 711,
@@ -15341,7 +15341,7 @@
       "zh_hans": "\u867d\u7136\u8eab\u4f53\u7684\u88c2\u7f1d\u4f1a\u56e0\n\u767d\u5929\u7684\u6d3b\u52a8\u800c\u53d8\u5927\uff0c\n\u4f46\u53ea\u8981\u4e00\u665a\u5c31\u80fd\u5168\u90e8\u957f\u597d\u3002",
       "zh_hant": "\u96d6\u7136\u8eab\u9ad4\u7684\u88c2\u7e2b\u6703\u56e0\n\u767d\u5929\u7684\u6d3b\u52d5\u800c\u8b8a\u5927\uff0c\n\u4f46\u53ea\u8981\u4e00\u665a\u5c31\u80fd\u5168\u90e8\u9577\u597d\u3002"
     },
-    "forms": ["hisui"]
+    "forms": ["hisui", "hisui-noble"]
   },
   {
     "idx": 714,
@@ -15405,7 +15405,7 @@
       "de": "Es hei\u00dft, dieses Pok\u00e9mon spende ewiges Leben, sobald das\nGeweih auf seinem Haupt in sieben verschiedenen Farben\nleuchtet.",
       "ja": "\u982d\u306e\u3000\u30c4\u30ce\u304c\u3000\u4e03\u8272\u306b\u3000\u8f1d\u304f\u3068\u304d\n\u6c38\u9060\u306e\u3000\u547d\u3092\n\u5206\u3051\u4e0e\u3048\u308b\u3068\u3000\u8a00\u308f\u308c\u3066\u3044\u308b\u3002"
     },
-    "forms": []
+    "forms": ["active"]
   },
   {
     "idx": 717,
@@ -15447,7 +15447,7 @@
       "zh_hans": "\u636e\u8bf4\uff0c\u5728\u4e0e\u5a01\u80c1\u5230\u751f\u6001\u7cfb\u7edf\u8005\u6218\u6597\u65f6\uff0c\n\u5b83\u4f1a\u53d8\u5316\u4e3a\u66f4\u5f3a\u5927\u7684\u6837\u5b50\u3002",
       "zh_hant": "\u64da\u8aaa\u7576\u7260\u8207\u5a01\u8105\u5230\n\u751f\u614b\u7cfb\u7d71\u7684\u5c0d\u624b\u6230\u9b25\u6642\uff0c\n\u6703\u8b8a\u5316\u6210\u66f4\u5f37\u5927\u7684\u6a23\u5b50\u3002"
     },
-    "forms": []
+    "forms": ["10", "complete"]
   },
   {
     "idx": 719,
@@ -15947,7 +15947,7 @@
       "zh_hans": "\u5438\u98df\u4e86\u6731\u7ea2\u8272\u82b1\u871c\u7684\u82b1\u821e\u9e1f\u3002\n\u8bad\u7ec3\u5bb6\u5f04\u9519\u6307\u793a\u7684\u8bdd\u5c31\u4f1a\u975e\u5e38\u751f\u6c14\u3002\n\u662f\u60c5\u611f\u53d8\u5316\u975e\u5e38\u5267\u70c8\u7684\u5bb6\u4f19\u3002",
       "zh_hant": "\u5438\u98df\u4e86\u6731\u7d05\u8272\u82b1\u871c\u7684\u82b1\u821e\u9ce5\u3002\n\u8a13\u7df4\u5bb6\u5982\u679c\u505a\u51fa\u4e86\u932f\u8aa4\u7684\u6307\u793a\uff0c\n\u611f\u60c5\u8d77\u4f0f\u6fc0\u70c8\u7684\u7260\u5c31\u6703\u975e\u5e38\u751f\u6c23\u3002"
     },
-    "forms": []
+    "forms": ["pau", "pom-pom", "sensu"]
   },
   {
     "idx": 742,
@@ -16035,7 +16035,7 @@
       "zh_hans": "\u4f1a\u7528\u654f\u6377\u7684\u52a8\u4f5c\u5c06\u730e\u7269\n\u4e00\u70b9\u4e00\u70b9\u903c\u5165\u7edd\u5883\u3002\n\u5229\u9f7f\u603b\u662f\u7784\u51c6\u7740\u5bf9\u65b9\u7684\u8981\u5bb3\u3002",
       "zh_hant": "\u6703\u7528\u654f\u6377\u7684\u52d5\u4f5c\u5c07\u7375\u7269\n\u4e00\u6b65\u6b65\u5730\u903c\u5165\u7d55\u5883\u3002\n\u5c16\u7259\u7e3d\u662f\u7784\u6e96\u8457\u5c0d\u65b9\u7684\u8981\u5bb3\u3002"
     },
-    "forms": []
+    "forms": ["dusk", "midnight"]
   },
   {
     "idx": 746,
@@ -16057,7 +16057,7 @@
       "zh_hans": "\u611f\u89c9\u5230\u5371\u9669\u65f6\u773c\u775b\u5c31\u4f1a\u53d8\u5f97\u6e7f\u6da6\u3002\n\u773c\u6cea\u7684\u5149\u4eae\u4f1a\u6210\u4e3a\u53ec\u96c6\u4f19\u4f34\u7684\u4fe1\u53f7\uff0c\n\u8ba9\u8bb8\u591a\u7684\u5f31\u4e01\u9c7c\u805a\u5728\u4e00\u8d77\u3002",
       "zh_hant": "\u611f\u89ba\u5230\u5371\u96aa\u6642\u773c\u775b\u5c31\u6703\u8b8a\u5f97\u6fd5\u6f64\u3002\n\u773c\u6dda\u7684\u5149\u4eae\u6703\u6210\u70ba\u53ec\u96c6\u5925\u4f34\u7684\u4fe1\u865f\uff0c\n\u8b93\u8a31\u591a\u7684\u5f31\u4e01\u9b5a\u805a\u5728\u4e00\u8d77\u3002"
     },
-    "forms": []
+    "forms": ["school"]
   },
   {
     "idx": 747,
@@ -16651,7 +16651,7 @@
       "zh_hans": "\u4e0e\u6240\u4fe1\u8d56\u7684\u8bad\u7ec3\u5bb6\u4e4b\u95f4\u7684\u7275\u7eca\n\u662f\u89e3\u653e\u5b83\u771f\u6b63\u529b\u91cf\u7684\n\u6700\u540e\u4e00\u4e2a\u8981\u7d20\u3002",
       "zh_hant": "\u8207\u6240\u4fe1\u8cf4\u7684\u8a13\u7df4\u5bb6\u4e4b\u9593\u7684\u727d\u7d46\n\u662f\u89e3\u653e\u7260\u771f\u6b63\u529b\u91cf\u7684\n\u6700\u5f8c\u4e00\u500b\u8981\u7d20\u3002"
     },
-    "forms": []
+    "forms": ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "poison", "psychic", "rock", "steel", "water"]
   },
   {
     "idx": 774,
@@ -16673,7 +16673,7 @@
       "zh_hans": "\u5916\u58f3\u975e\u5e38\u575a\u56fa\uff0c\u4f46\u843d\u5230\u5730\u4e0a\u7684\n\u51b2\u51fb\u4f1a\u8ba9\u5b83\u788e\u6210\u7ec6\u5c51\u3002",
       "zh_hant": "\u5916\u6bbc\u975e\u5e38\u5805\u56fa\uff0c\n\u4f46\u589c\u843d\u5230\u5730\u4e0a\u6642\u7684\u885d\u64ca\n\u6703\u8b93\u7260\u788e\u6210\u7d30\u5c51\u3002"
     },
-    "forms": []
+    "forms": ["blue", "blue-gen7", "green", "green-gen7", "indigo", "indigo-gen7", "orange", "orange-gen7", "red", "red-gen7", "violet", "violet-gen7", "yellow", "yellow-gen7"]
   },
   {
     "idx": 775,
@@ -17245,7 +17245,7 @@
       "zh_hans": "\u4e3a\u751f\u5b58\u800c\u53d1\u72c2\u822c\u5730\u5bfb\u627e\u7740\u5149\u3002\n\u4f1a\u53d1\u5c04\u51fa\u6fc0\u5149\uff0c\n\u5c06\u6240\u6709\u4e1c\u897f\u5207\u6210\u788e\u7247\u3002",
       "zh_hant": "\u70ba\u751f\u5b58\u800c\u767c\u72c2\u822c\u5730\u5c0b\u627e\u8457\u5149\u3002\n\u6703\u767c\u5c04\u51fa\u96f7\u5c04\u5149\uff0c\n\u5c07\u6240\u6709\u6771\u897f\u5207\u6210\u788e\u7247\u3002"
     },
-    "forms": []
+    "forms": ["dawn", "dusk", "ultra"]
   },
   {
     "idx": 801,
@@ -17267,7 +17267,7 @@
       "zh_hans": "\u5927\u7ea6\uff15\uff10\uff10\u5e74\u524d\u7531\u79d1\u5b66\u5bb6\u5236\u4f5c\u800c\u6210\u3002\n\u88ab\u79f0\u4e3a\u9b42\u5fc3\u7684\u90e8\u5206\u662f\u5b83\u7684\u672c\u4f53\u3002",
       "zh_hant": "\u7531\u5927\u7d04\uff15\uff10\uff10\u5e74\u524d\u7684\n\u79d1\u5b78\u5bb6\u6240\u88fd\u9020\u3002\n\u672c\u9ad4\u662f\u88ab\u7a31\u70ba\u9b42\u5fc3\u7684\u96f6\u4ef6\u3002"
     },
-    "forms": []
+    "forms": ["original"]
   },
   {
     "idx": 802,
@@ -17289,7 +17289,7 @@
       "zh_hans": "\u62e5\u6709\u6f5c\u5165\u4e00\u5207\u5f71\u5b50\u91cc\u7684\u80fd\u529b\uff0c\n\u6240\u4ee5\u5728\u5f88\u957f\u4e00\u6bb5\u65f6\u95f4\u91cc\n\u90fd\u6ca1\u6709\u4efb\u4f55\u4eba\u53d1\u73b0\u5b83\u3002",
       "zh_hant": "\u64c1\u6709\u6f5b\u5165\u4e00\u5207\u5f71\u5b50\u88e1\u7684\u80fd\u529b\uff0c\n\u6240\u4ee5\u5728\u5f88\u9577\u4e00\u6bb5\u6642\u9593\u88e1\n\u90fd\u6c92\u6709\u4efb\u4f55\u4eba\u767c\u73fe\u7260\u3002"
     },
-    "forms": []
+    "forms": ["gen7"]
   },
   {
     "idx": 803,
@@ -18235,7 +18235,7 @@
       "zh_hans": "\u975e\u5e38\u8d2a\u5403\uff0c\u4f1a\u628a\u523a\u68ad\u9c7c\u6574\u53ea\n\u541e\u8fdb\u5634\u91cc\u3002\u5076\u5c14\u4e5f\u4f1a\u641e\u9519\u5bf9\u8c61\n\u53bb\u54ac\u5176\u4ed6\u7684\u5b9d\u53ef\u68a6\u3002",
       "zh_hant": "\u975e\u5e38\u8caa\u5403\uff0c\u6703\u628a\u523a\u68ad\u9b5a\u6574\u96bb\n\u541e\u9032\u5634\u88e1\u3002\u5076\u723e\u4e5f\u6703\u641e\u932f\u5c0d\u8c61\n\u53bb\u54ac\u5176\u4ed6\u7684\u5bf6\u53ef\u5922\u3002"
     },
-    "forms": []
+    "forms": ["gorging", "gulping"]
   },
   {
     "idx": 846,
@@ -18323,7 +18323,7 @@
       "zh_hans": "\u6c14\u52bf\u6c79\u6c79\u7684\u6025\u6027\u5b50\u3002\n\u4f1a\u5927\u53e3\u559d\u4e0b\u6d51\u6d4a\u7684\u6c34\uff0c\n\u5438\u6536\u5176\u4e2d\u6240\u542b\u7684\u6bd2\u7d20\u3002",
       "zh_hant": "\u6c23\u52e2\u6d36\u6d36\u7684\u6025\u6027\u5b50\u3002\n\u6703\u5927\u53e3\u559d\u4e0b\u6df7\u6fc1\u7684\u6c34\uff0c\n\u5438\u6536\u5176\u4e2d\u6240\u542b\u7684\u6bd2\u7d20\u3002"
     },
-    "forms": ["gmax"]
+    "forms": ["gmax", "low-key"]
   },
   {
     "idx": 850,
@@ -18763,7 +18763,7 @@
       "zh_hans": "\u5f53\u5b83\u611f\u5230\u5e78\u798f\u7684\u65f6\u5019\uff0c\n\u624b\u4e2d\u4ea7\u751f\u51fa\u7684\u9c9c\u5976\u6cb9\n\u4f1a\u53d8\u5f97\u66f4\u52a0\u9999\u6d53\u751c\u7f8e\u3002",
       "zh_hant": "\u7576\u7260\u611f\u5230\u5e78\u798f\u7684\u6642\u5019\uff0c\n\u624b\u4e2d\u7522\u751f\u51fa\u7684\u9bae\u5976\u6cb9\n\u6703\u8b8a\u5f97\u66f4\u52a0\u9999\u6fc3\u751c\u7f8e\u3002"
     },
-    "forms": ["gmax"]
+    "forms": ["gmax", "caramel-swirl-berry", "caramel-swirl-clover", "caramel-swirl-flower", "caramel-swirl-love", "caramel-swirl-plain", "caramel-swirl-ribbon", "caramel-swirl-star", "caramel-swirl-strawberry", "lemon-cream-berry", "lemon-cream-clover", "lemon-cream-flower", "lemon-cream-love", "lemon-cream-plain", "lemon-cream-ribbon", "lemon-cream-star", "lemon-cream-strawberry", "matcha-cream-berry", "matcha-cream-clover", "matcha-cream-flower", "matcha-cream-love", "matcha-cream-plain", "matcha-cream-ribbon", "matcha-cream-star", "matcha-cream-strawberry", "mint-cream-berry", "mint-cream-clover", "mint-cream-flower", "mint-cream-love", "mint-cream-plain", "mint-cream-ribbon", "mint-cream-star", "mint-cream-strawberry", "rainbow-swirl-berry", "rainbow-swirl-clover", "rainbow-swirl-flower", "rainbow-swirl-love", "rainbow-swirl-plain", "rainbow-swirl-ribbon", "rainbow-swirl-star", "rainbow-swirl-strawberry", "ruby-cream-berry", "ruby-cream-clover", "ruby-cream-flower", "ruby-cream-love", "ruby-cream-plain", "ruby-cream-ribbon", "ruby-cream-star", "ruby-cream-strawberry", "ruby-swirl-berry", "ruby-swirl-clover", "ruby-swirl-flower", "ruby-swirl-love", "ruby-swirl-plain", "ruby-swirl-ribbon", "ruby-swirl-star", "ruby-swirl-strawberry", "salted-cream-berry", "salted-cream-clover", "salted-cream-flower", "salted-cream-love", "salted-cream-plain", "salted-cream-ribbon", "salted-cream-star", "salted-cream-strawberry", "vanilla-cream-berry", "vanilla-cream-clover", "vanilla-cream-flower", "vanilla-cream-love", "vanilla-cream-plain", "vanilla-cream-ribbon", "vanilla-cream-star", "vanilla-cream-strawberry"]
   },
   {
     "idx": 870,
@@ -18895,7 +18895,7 @@
       "zh_hans": "\u65e0\u8bba\u4f55\u65f6\u90fd\u7528\u51b0\u5757\u51b0\u9547\u7740\n\u81ea\u5df1\u6015\u70ed\u7684\u8138\u3002\u4f1a\u628a\u5934\u9876\n\u4e0a\u7684\u6bdb\u5782\u5230\u6d77\u91cc\u9493\u98df\u7269\u5403\u3002",
       "zh_hant": "\u7121\u8ad6\u4f55\u6642\u90fd\u7528\u51b0\u584a\u51b0\u93ae\u8457\n\u81ea\u5df1\u6015\u71b1\u7684\u81c9\u3002\u6703\u628a\u982d\u9802\n\u4e0a\u7684\u6bdb\u5782\u5230\u6d77\u88e1\u91e3\u98df\u7269\u5403\u3002"
     },
-    "forms": []
+    "forms": ["noice"]
   },
   {
     "idx": 876,
@@ -18939,7 +18939,7 @@
       "zh_hans": "\u65e0\u8bba\u600e\u4e48\u5403\u90fd\u4f1a\u9a6c\u4e0a\u809a\u5b50\u997f\u3002\n\u5341\u5206\u73cd\u7231\u81ea\u5df1\u7528\u7535\u70d8\u70e4\u8fc7\u7684\n\u79cd\u5b50\uff0c\u968f\u65f6\u90fd\u5e26\u5728\u8eab\u4e0a\u3002",
       "zh_hant": "\u7121\u8ad6\u600e\u9ebc\u5403\u90fd\u6703\u99ac\u4e0a\u809a\u5b50\u9913\u3002\n\u5341\u5206\u73cd\u611b\u81ea\u5df1\u7528\u96fb\u70d8\u70e4\u904e\u7684\n\u7a2e\u5b50\uff0c\u96a8\u6642\u90fd\u5e36\u5728\u8eab\u4e0a\u3002"
     },
-    "forms": []
+    "forms": ["hangry"]
   },
   {
     "idx": 878,
@@ -19181,7 +19181,7 @@
       "zh_hans": "\u8fd9\u53ea\u5b9d\u53ef\u68a6\u88ab\u8ba4\u4e3a\u662f\u6c89\u7761\u5df2\u4e45\u7684\n\u85cf\u739b\u7136\u7279\u7684\u59d0\u59d0\uff0c\u4e5f\u6709\u4eba\n\u8ba4\u4e3a\u5b83\u4eec\u4e4b\u95f4\u662f\u52b2\u654c\u5173\u7cfb\u3002",
       "zh_hant": "\u9019\u96bb\u5bf6\u53ef\u5922\u88ab\u8a8d\u70ba\u662f\u6c89\u7761\u5df2\u4e45\u7684\n\u85cf\u746a\u7136\u7279\u7684\u59d0\u59d0\uff0c\u4e5f\u6709\u4eba\n\u8a8d\u70ba\u7260\u5011\u4e4b\u9593\u662f\u52c1\u6575\u95dc\u4fc2\u3002"
     },
-    "forms": []
+    "forms": ["crowned"]
   },
   {
     "idx": 889,
@@ -19203,7 +19203,7 @@
       "zh_hans": "\u4ee5\u77f3\u50cf\u822c\u7684\u59ff\u6001\u9677\u5165\n\u957f\u4e45\u6c89\u7720\u7684\u5b9d\u53ef\u68a6\u3002\n\u51e0\u4e4e\u5c31\u8981\u88ab\u4eba\u4eec\u6240\u9057\u5fd8\u3002",
       "zh_hant": "\u4ee5\u77f3\u50cf\u822c\u7684\u59ff\u614b\u9677\u5165\n\u9577\u4e45\u6c89\u7720\u7684\u5bf6\u53ef\u5922\u3002\n\u5e7e\u4e4e\u5c31\u8981\u88ab\u4eba\u5011\u6240\u907a\u5fd8\u3002"
     },
-    "forms": []
+    "forms": ["crowned"]
   },
   {
     "idx": 890,
@@ -19225,7 +19225,7 @@
       "zh_hans": "\u6765\u81ea\u4e8e\uff12\u4e07\u5e74\u524d\u5760\u843d\n\u5230\u5730\u4e0a\u7684\u9668\u77f3\u4e4b\u4e2d\u3002\n\u4f3c\u4e4e\u4e0e\u6781\u5de8\u5316\u4e4b\u8c1c\u6709\u6240\u5173\u8054\u3002",
       "zh_hant": "\u4f86\u81ea\u65bc\uff12\u842c\u5e74\u524d\u589c\u843d\n\u5230\u5730\u4e0a\u7684\u9695\u77f3\u4e4b\u4e2d\u3002\n\u4f3c\u4e4e\u8207\u6975\u5de8\u5316\u4e4b\u8b0e\u6709\u6240\u95dc\u806f\u3002"
     },
-    "forms": []
+    "forms": ["eternamax"]
   },
   {
     "idx": 891,
@@ -19269,7 +19269,7 @@
       "zh_hans": "\u751f\u6d3b\u5728\u9065\u8fdc\u5730\u533a\u7684\u5c71\u5cb3\u5730\u5e26\u3002\n\u901a\u8fc7\u5728\u65ad\u5d16\u7edd\u58c1\u4e0a\u5954\u8dd1\n\u6765\u953b\u70bc\u8170\u817f\uff0c\u78e8\u70bc\u62db\u5f0f\u3002",
       "zh_hant": "\u68f2\u606f\u5728\u9059\u9060\u5730\u5340\u7684\u5c71\u5cb3\u5730\u5e36\u3002\n\u6703\u5728\u65b7\u5d16\u7d55\u58c1\u4e0a\u4f86\u56de\u5954\u8dd1\n\u935b\u934a\u4e0b\u76e4\uff0c\u78e8\u7df4\u62db\u5f0f\u3002"
     },
-    "forms": ["gmax"]
+    "forms": ["gmax", "rapid-strike-gmax"]
   },
   {
     "idx": 893,
@@ -19291,7 +19291,7 @@
       "zh_hans": "\u957f\u5728\u8eab\u4e0a\u7684\u85e4\u8513\u65ad\u6389\u4e4b\u540e\n\u4f1a\u53d8\u6210\u571f\u58e4\u7684\u517b\u5206\uff0c\n\u5e2e\u52a9\u68ee\u6797\u4e2d\u7684\u690d\u7269\u6210\u957f\u3002",
       "zh_hant": "\u751f\u9577\u5728\u8eab\u4e0a\u7684\u85e4\u8513\u65b7\u843d\u5f8c\n\u6703\u5316\u70ba\u571f\u58e4\u7684\u990a\u5206\uff0c\n\u5b55\u80b2\u68ee\u6797\u88e1\u7684\u5404\u7a2e\u690d\u7269\u3002"
     },
-    "forms": []
+    "forms": ["dada"]
   },
   {
     "idx": 894,
@@ -19401,7 +19401,7 @@
       "zh_hans": "\u66fe\u7ecf\u5728\u5f88\u4e45\u4ee5\u524d\u7edf\u6cbb\u7740\n\u4f3d\u52d2\u5c14\u7684\u4f20\u8bf4\u4e4b\u738b\u3002\u62e5\u6709\n\u6cbb\u6108\u5fc3\u7075\u548c\u8ba9\u8349\u6728\u53d1\u82bd\u7684\u80fd\u529b\u3002",
       "zh_hant": "\u66fe\u5728\u5f88\u4e45\u4ee5\u524d\u7d71\u6cbb\u4f3d\u52d2\u723e\u7684\n\u50b3\u8aaa\u4e4b\u738b\u3002\u64c1\u6709\u6cbb\u7652\u5fc3\u9748\uff0c\n\u8b93\u8349\u6728\u767c\u82bd\u7684\u529b\u91cf\u3002"
     },
-    "forms": []
+    "forms": ["ice-rider", "shadow-rider"]
   },
   {
     "idx": 899,
@@ -19431,7 +19431,7 @@
       "zh_hant": "\u5288\u65a7\u87b3\u8782"
     },
     "desc": {},
-    "forms": []
+    "forms": ["noble"]
   },
   {
     "idx": 901,
@@ -19446,7 +19446,7 @@
       "zh_hant": "\u6708\u6708\u718a"
     },
     "desc": {},
-    "forms": []
+    "forms": ["bloodmoon"]
   },
   {
     "idx": 902,
@@ -19693,7 +19693,7 @@
     "desc": {
       "en": "It entrances female Pok\u00e9mon with the sweet,\nalluring scent that wafts from all over its body."
     },
-    "forms": []
+    "forms": ["female"]
   },
   {
     "idx": 917,
@@ -19846,7 +19846,7 @@
     "desc": {
       "en": "The larger pair protects the little ones during\nbattles. When facing strong opponents, the whole\ngroup will join the fight."
     },
-    "forms": []
+    "forms": ["family-of-three"]
   },
   {
     "idx": 926,
@@ -19948,7 +19948,7 @@
     "desc": {
       "en": "Green-feathered flocks hold the most sway. When\nthey\u2019re out searching for food in the mornings\nand evenings, it gets very noisy."
     },
-    "forms": []
+    "forms": ["blue-plumage", "yellow-plumage", "white-plumage"]
   },
   {
     "idx": 932,
@@ -20509,7 +20509,7 @@
     "desc": {
       "en": "Its physical capabilities are no different than a\nFinizen\u2019s, but when its allies are in danger, it\ntransforms and powers itself up."
     },
-    "forms": []
+    "forms": ["hero"]
   },
   {
     "idx": 965,
@@ -20747,7 +20747,7 @@
     "desc": {
       "en": "Tatsugiri is an extremely cunning Pok\u00e9mon. It\nfeigns weakness to lure in prey, then orders its\npartner to attack."
     },
-    "forms": []
+    "forms": ["droopy", "stretchy"]
   },
   {
     "idx": 979,
@@ -20815,7 +20815,7 @@
     "desc": {
       "en": "It drives enemies out of its nest by sucking in\nenough air to fill its long, narrow lungs, then\nreleasing the air in an intense blast."
     },
-    "forms": []
+    "forms": ["three-segment"]
   },
   {
     "idx": 983,
@@ -21104,7 +21104,7 @@
     "desc": {
       "en": "It lives inside an old treasure chest. Sometimes\nit gets left in shop corners since no one\nrealizes it\u2019s actually a Pok\u00e9mon."
     },
-    "forms": []
+    "forms": ["roaming"]
   },
   {
     "idx": 1000,
@@ -21290,6 +21290,186 @@
     },
     "desc": {
       "en": "According to the few eyewitness accounts that\nexist, it used its shining blades to julienne\nlarge trees and boulders."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1011,
+    "slug": "dipplin",
+    "gen": 9,
+    "name": {
+      "en": "Dipplin"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1012,
+    "slug": "poltchageist",
+    "gen": 9,
+    "name": {
+      "en": "Poltchageist"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": ["artisan"]
+  },
+  {
+    "idx": 1013,
+    "slug": "sinistcha",
+    "gen": 9,
+    "name": {
+      "en": "Sinistcha"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": ["masterpiece"]
+  },
+  {
+    "idx": 1014,
+    "slug": "okidogi",
+    "gen": 9,
+    "name": {
+      "en": "Okidogi"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1015,
+    "slug": "munkidori",
+    "gen": 9,
+    "name": {
+      "en": "Munkidori"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1016,
+    "slug": "fezandipiti",
+    "gen": 9,
+    "name": {
+      "en": "Fezandipiti"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1017,
+    "slug": "ogerpon",
+    "gen": 9,
+    "name": {
+      "en": "Ogerpon"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": ["wellspring-mask", "hearthflame-mask", "cornerstone-mask", "terastal-teal-mask", "terastal-wellspring-mask", "terastal-hearthflame-mask", "terastal-cornerstone-mask"]
+  },
+  {
+    "idx": 1018,
+    "slug": "archaludon",
+    "gen": 9,
+    "name": {
+      "en": "Archaludon"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1019,
+    "slug": "hydrapple",
+    "gen": 9,
+    "name": {
+      "en": "Hydrapple"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1020,
+    "slug": "gouging-fire",
+    "gen": 9,
+    "name": {
+      "en": "Gouging Fire"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1021,
+    "slug": "raging-bolt",
+    "gen": 9,
+    "name": {
+      "en": "Raging Bolt"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1022,
+    "slug": "iron-boulder",
+    "gen": 9,
+    "name": {
+      "en": "Iron Boulder"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1023,
+    "slug": "iron-crown",
+    "gen": 9,
+    "name": {
+      "en": "Iron Crown"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": []
+  },
+  {
+    "idx": 1024,
+    "slug": "terapagos",
+    "gen": 9,
+    "name": {
+      "en": "Terapagos"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
+    },
+    "forms": ["terastal", "stellar"]
+  },
+  {
+    "idx": 1025,
+    "slug": "pecharunt",
+    "gen": 9,
+    "name": {
+      "en": "Pecharunt"
+    },
+    "desc": {
+      "en": "A Pok\u00e9mon introduced in Generation 9."
     },
     "forms": []
   }

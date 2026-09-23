@@ -35,8 +35,16 @@ pub fn findPokemon(name: []const u8) ?*const embedded.Pokemon {
         if (std.ascii.eqlIgnoreCase(pokemon.slug, name)) return pokemon;
     }
 
+    for (&embedded.pokemon_forms) |*pokemon| {
+        if (std.ascii.eqlIgnoreCase(pokemon.slug, name)) return pokemon;
+    }
+
     // Linear search by name
     for (&embedded.pokemon_list) |*pokemon| {
+        if (std.ascii.eqlIgnoreCase(pokemon.name, name)) return pokemon;
+    }
+
+    for (&embedded.pokemon_forms) |*pokemon| {
         if (std.ascii.eqlIgnoreCase(pokemon.name, name)) return pokemon;
     }
 

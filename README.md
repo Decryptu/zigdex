@@ -62,7 +62,7 @@ This will:
 
 1. Generate embedded sprites from your `assets/` directory at compile time
 2. Create a single executable at `zig-out/bin/zigdex`
-3. Embed all 1010+ Pokemon sprites directly into the binary
+3. Embed all 1025 Pokemon sprites and 447 alternate forms directly into the binary
 
 ## Usage
 
