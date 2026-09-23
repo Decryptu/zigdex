@@ -12,7 +12,7 @@ pub fn build(b: *std.Build) void {
             .optimize = .ReleaseFast,
         }),
     });
-    gen_sprites.linkSystemLibrary("z");
+    gen_sprites.root_module.linkSystemLibrary("z", .{});
 
     const run_gen = b.addRunArtifact(gen_sprites);
     run_gen.addFileArg(b.path("assets/pokemon.json"));

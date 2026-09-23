@@ -55,29 +55,29 @@ inline fn getSprite(pokemon: *const embedded.Pokemon, shiny: bool) []const u8 {
     return if (shiny) pokemon.shiny_sprite else pokemon.regular_sprite;
 }
 
-pub fn displayRandom(force_shiny: bool, hide_name: bool) !void {
-    const seed = @as(u64, @bitCast(@as(i64, @truncate(std.time.nanoTimestamp()))));
+pub fn displayRandom(io: std.Io, force_shiny: bool, hide_name: bool) !void {
+    const seed = @as(u64, @bitCast(@as(i64, @truncate(std.Io.Clock.real.now(io).nanoseconds))));
     var rng = Xorshift64.init(seed);
 
     const is_shiny = force_shiny or (rng.next() % 128 == 0);
     const index = rng.range(embedded.pokemon_count);
     const pokemon = &embedded.pokemon_list[index];
 
-    try displayPokemon(pokemon, is_shiny, hide_name);
+    try displayPokemon(io, pokemon, is_shiny, hide_name);
 }
 
-pub fn display(name: []const u8, shiny: bool, hide_name: bool) !void {
+pub fn display(io: std.Io, name: []const u8, shiny: bool, hide_name: bool) !void {
     const pokemon = findPokemon(name) orelse return error.PokemonNotFound;
-    try displayPokemon(pokemon, shiny, hide_name);
+    try displayPokemon(io, pokemon, shiny, hide_name);
 }
 
-fn displayPokemon(pokemon: *const embedded.Pokemon, shiny: bool, hide_name: bool) !void {
-    const stdout = std.fs.File.stdout();
+fn displayPokemon(io: std.Io, pokemon: *const embedded.Pokemon, shiny: bool, hide_name: bool) !void {
+    const stdout = std.Io.File.stdout();
 
     if (!hide_name) {
         var buf: [256]u8 = undefined;
         const name_line = try std.fmt.bufPrint(&buf, "{s}\n", .{pokemon.name});
-        try stdout.writeAll(name_line);
+        try stdout.writeStreamingAll(io, name_line);
     }
 
     // Decompress zlib-compressed sprite and write to stdout
@@ -87,7 +87,7 @@ fn displayPokemon(pokemon: *const embedded.Pokemon, shiny: bool, hide_name: bool
     var decompress: std.compress.flate.Decompress = .init(&reader, .zlib, &decompress_buf);
 
     var write_buf: [8192]u8 = undefined;
-    var file_writer = stdout.writerStreaming(&write_buf);
+    var file_writer = stdout.writerStreaming(io, &write_buf);
     _ = try decompress.reader.streamRemaining(&file_writer.interface);
     try file_writer.interface.flush();
 }

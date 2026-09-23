@@ -9,9 +9,7 @@ pub const Args = struct {
     count: usize = 0,
 };
 
-pub fn parse() Args {
-    const args = std.os.argv;
-
+pub fn parse(args: []const [:0]const u8) Args {
     var result = Args{};
 
     // Fast path: no arguments
@@ -20,9 +18,7 @@ pub fn parse() Args {
     }
 
     // Parse without any allocations
-    for (args[1..]) |arg_ptr| {
-        const arg = std.mem.span(arg_ptr);
-
+    for (args[1..]) |arg| {
         // Check for flags and special keywords
         if (std.mem.eql(u8, arg, "-h") or std.mem.eql(u8, arg, "--help")) {
             result.help = true;
@@ -42,8 +38,8 @@ pub fn parse() Args {
     return result;
 }
 
-pub fn printUsage() !void {
-    try std.fs.File.stdout().writeAll(
+pub fn printUsage(io: std.Io) !void {
+    try std.Io.File.stdout().writeStreamingAll(io,
         \\zigdex - Display Pokemon sprites in your terminal
         \\
         \\Usage: zigdex [options] [pokemon...]
