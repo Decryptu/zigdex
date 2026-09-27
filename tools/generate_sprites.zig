@@ -86,44 +86,74 @@ pub fn main(init: std.process.Init) !void {
         }
     }.lessThan);
 
+    // Tables hold offsets into the embedded data rather than slices: pointers stored in data
+    // must be rebased by the dynamic loader on every launch, which dominates startup on macOS.
+    var strings: Strings = .{ .data = &blob };
     var source: std.Io.Writer.Allocating = .init(arena);
     const w = &source.writer;
     try w.print(
+        \\/// A byte range of `data`.
+        \\pub const Span = struct {{ start: u32, len: u32 }};
+        \\
         \\pub const Pokemon = struct {{
         \\    idx: u16,
-        \\    slug: []const u8,
-        \\    name: []const u8,
+        \\    slug: Span,
+        \\    name: Span,
         \\    /// Raw deflate stream of the encoded regular sprite followed by the shiny one.
-        \\    sprites: []const u8,
+        \\    sprites: Span,
         \\    regular_len: u32,
         \\    shiny_len: u32,
         \\}};
         \\
-        \\pub const Key = struct {{ key: []const u8, index: u16 }};
+        \\pub const Key = struct {{ key: Span, index: u16 }};
         \\
         \\pub const pokemon_count = {d};
         \\pub const max_sprites_len = {d};
         \\
-        \\const blob = @embedFile("sprites.bin");
+        \\pub const data = @embedFile("data.bin");
         \\
         \\/// National dex species in order, followed by alternate forms.
         \\pub const pokemon = [_]Pokemon{{
         \\
     , .{ pokemon_count, max_len });
     for (entries.items) |e| {
-        try w.print("    .{{ .idx = {d}, .slug = \"{f}\", .name = \"{f}\", .sprites = blob[{d}..{d}], .regular_len = {d}, .shiny_len = {d} }},\n", .{
-            e.idx, std.zig.fmtString(e.slug), std.zig.fmtString(e.name), e.offset, e.offset + e.len, e.regular_len, e.shiny_len,
+        try w.print("    .{{ .idx = {d}, .slug = {f}, .name = {f}, .sprites = .{{ .start = {d}, .len = {d} }}, .regular_len = {d}, .shiny_len = {d} }},\n", .{
+            e.idx, try strings.intern(arena, e.slug), try strings.intern(arena, e.name), e.offset, e.len, e.regular_len, e.shiny_len,
         });
     }
     try w.writeAll("};\n\n/// Lowercase slugs and names, sorted for binary search.\npub const keys = [_]Key{\n");
     for (keys.items) |k| {
-        try w.print("    .{{ .key = \"{f}\", .index = {d} }},\n", .{ std.zig.fmtString(k.key), k.index });
+        try w.print("    .{{ .key = {f}, .index = {d} }},\n", .{ try strings.intern(arena, k.key), k.index });
     }
     try w.writeAll("};\n");
 
-    try out_dir.writeFile(io, .{ .sub_path = "sprites.bin", .data = blob.items });
+    try out_dir.writeFile(io, .{ .sub_path = "data.bin", .data = blob.items });
     try out_dir.writeFile(io, .{ .sub_path = "embedded_sprites.zig", .data = source.written() });
 }
+
+/// Appends strings to the embedded data once each, formatting their location as a `Span` literal.
+const Strings = struct {
+    data: *std.ArrayList(u8),
+    seen: std.StringHashMapUnmanaged(Span) = .empty,
+
+    const Span = struct {
+        start: usize,
+        len: usize,
+
+        pub fn format(span: Span, w: *std.Io.Writer) std.Io.Writer.Error!void {
+            try w.print(".{{ .start = {d}, .len = {d} }}", .{ span.start, span.len });
+        }
+    };
+
+    fn intern(strings: *Strings, arena: std.mem.Allocator, text: []const u8) !Span {
+        const entry = try strings.seen.getOrPut(arena, text);
+        if (!entry.found_existing) {
+            entry.value_ptr.* = .{ .start = strings.data.items.len, .len = text.len };
+            try strings.data.appendSlice(arena, text);
+        }
+        return entry.value_ptr.*;
+    }
+};
 
 fn addEntry(
     arena: std.mem.Allocator,

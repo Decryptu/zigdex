@@ -23,22 +23,22 @@ A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
 ## Performance
 
-Mean time of `random`, measured with `hyperfine -N --warmup 100 --runs 2000`:
+Mean time of `random`, measured with `hyperfine -N` over at least 2000 runs:
 
 | Command | macOS 27, Apple Silicon | Linux x86_64 |
 |:---|---:|---:|
-| `zigdex random` | 1.3 ms | 0.23 ms |
-| `pokeget random` | 1.7 ms | 2.24 ms |
-| `krabby random` | 3.9 ms | 6.50 ms |
+| `zigdex random` | 1.10 ms | 0.22 ms |
+| `pokeget random` | 1.72 ms | 2.23 ms |
+| `krabby random` | 4.07 ms | 6.84 ms |
 
 ```ascii
 macOS
-zigdex   ▓▓▓░░░░░░░  1.3ms  ← 2.9x faster than krabby
-pokeget  ▓▓▓▓░░░░░░  1.7ms
-krabby   ▓▓▓▓▓▓▓▓▓▓  3.9ms
+zigdex   ▓▓▓░░░░░░░  1.10ms  ← 3.7x faster than krabby
+pokeget  ▓▓▓▓░░░░░░  1.72ms
+krabby   ▓▓▓▓▓▓▓▓▓▓  4.07ms
 ```
 
-<sub>For reference, `/usr/bin/true` takes 0.68 ms on the same Mac. Linux runs used pokeget 1.6.7 and krabby 0.3.0, pinned to one core.</sub>
+<sub>For reference, `/usr/bin/true` takes 0.72 ms and an empty compiled C program about 1.0 ms on the same Mac. Linux runs used pokeget 1.6.7 and krabby 0.3.0, pinned to one core.</sub>
 
 ## Installation
 
@@ -133,7 +133,7 @@ zigdex/
 - Each Pokemon's regular and shiny sprites share one deflate stream, and all streams are embedded as a single blob
 - At runtime the sprite is inflated and drawn with half blocks, emitting only the color changes each cell needs and resetting colors at every line end
 - No runtime filesystem dependencies
-- Binary size: ~1.4MB (fully self-contained)
+- Binary size: ~1.2MB (fully self-contained)
 
 ### Fast Random Selection
 
@@ -155,6 +155,8 @@ Names and slugs are resolved with a binary search over a table sorted at build t
 ### Startup
 
 - Uses Zig's minimal entry point: no environment map, allocator or thread pool is set up
+- Writes straight to the file descriptor instead of going through `std.Io`, so on macOS dyld resolves only a handful of libSystem symbols at launch
+- Lookup tables store offsets rather than pointers, leaving almost nothing for dyld to rebase
 - No heap allocation at runtime
 - A handful of system calls per run, with the sprite written in a single `write`
 
