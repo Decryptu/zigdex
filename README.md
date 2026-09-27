@@ -38,7 +38,7 @@ pokeget  ▓▓▓▓░░░░░░  1.7ms
 krabby   ▓▓▓▓▓▓▓▓▓▓  3.9ms
 ```
 
-<sub>On macOS most of zigdex's time is process startup (dyld and libSystem), which every binary pays. Linux runs used pokeget 1.6.7 and krabby 0.3.0, pinned to one core.</sub>
+<sub>For reference, `/usr/bin/true` takes 0.68 ms on the same Mac. Linux runs used pokeget 1.6.7 and krabby 0.3.0, pinned to one core.</sub>
 
 ## Installation
 
