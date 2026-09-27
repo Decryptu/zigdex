@@ -23,7 +23,7 @@ A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
 ## Performance
 
-Mean time of `random`, measured with `hyperfine -N --warmup 100 --runs 2000`:
+Mean time of `random`, measured with `hyperfine -N` over at least 2000 runs:
 
 | Command | macOS 27, Apple Silicon | Linux x86_64 |
 |:---|---:|---:|
