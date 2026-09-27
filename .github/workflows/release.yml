@@ -3,9 +3,20 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Version tag to create on the selected branch, e.g. v0.4.0
+        required: true
+      notes:
+        description: Release notes (Markdown)
+        required: true
 
 permissions:
   contents: write
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
 
 jobs:
   release:
@@ -26,7 +37,7 @@ jobs:
         run: |
           for arch in aarch64 x86_64; do
             zig build -Doptimize=ReleaseFast -Dtarget=$arch-macos --prefix out/$arch
-            name=zigdex-$GITHUB_REF_NAME-$arch-macos
+            name=zigdex-$TAG-$arch-macos
             tar -czf $name.tar.gz -C out/$arch/bin zigdex
             (cd out/$arch/bin && zip -q "$GITHUB_WORKSPACE/$name.zip" zigdex)
           done
@@ -37,4 +48,11 @@ jobs:
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --title "Zigdex $GITHUB_REF_NAME" --notes-from-tag *.tar.gz *.zip checksums.txt md5sums.txt
+          NOTES: ${{ inputs.notes }}
+        run: |
+          assets=(*.tar.gz *.zip checksums.txt md5sums.txt)
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "Zigdex $TAG" --notes "$NOTES" "${assets[@]}"
+          else
+            gh release create "$TAG" --title "Zigdex $TAG" --notes-from-tag "${assets[@]}"
+          fi
