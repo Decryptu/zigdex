@@ -23,19 +23,19 @@ A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
 ## Performance
 
-| Command | Mean [µs] | Min [µs] | Max [µs] | Relative |
-|:---|---:|---:|---:|---:|
-| `zigdex random` | 630.4 ± 130.2 | 407.6 | 1993.0 | 1.00 |
-| `pokeget random` | 1203.0 ± 387.7 | 889.1 | 10657.3 | 1.91 ± 0.73 |
-| `krabby random` | 3632.3 ± 284.5 | 3182.5 | 5362.4 | 5.76 ± 1.27 |
+| Command | Median [µs] | Min [µs] | Relative |
+|:---|---:|---:|---:|
+| `zigdex random` | 185 | 138 | 1.00 |
+| `pokeget random` | 2158 | 1860 | 11.7 |
+| `krabby random` | 6281 | 5423 | 34.0 |
 
 ```ascii
-zigdex   ▓░░░░░░░░░  0.63ms  ← 5.8x faster than krabby
-pokeget  ▓▓░░░░░░░░  1.20ms
-krabby   ▓▓▓▓▓▓▓▓░░  3.63ms
+zigdex   ░░░░░░░░░░  0.19ms  ← 34x faster than krabby
+pokeget  ▓▓▓░░░░░░░  2.16ms
+krabby   ▓▓▓▓▓▓▓▓▓▓  6.28ms
 ```
 
-<sub>Benchmarked with `hyperfine --warmup 3`</sub>
+<sub>Linux x86_64, pokeget 1.6.7, krabby 0.3.0, `hyperfine -N --warmup 100 --runs 2000` pinned to one core</sub>
 
 ## Installation
 
@@ -125,15 +125,16 @@ zigdex/
 
 ### Compile-Time Sprite Embedding
 
-- Sprites are converted to byte arrays at compile time
-- The `generate_sprites.zig` tool runs during build
-- Creates `embedded_sprites.zig` with all Pokemon data
+- The `generate_sprites.zig` tool runs during the build and replays each ANSI sprite into a pixel grid
+- Every sprite is stored as a palette plus two pixels per cell, with 256-color sprites converted to truecolor and transparent borders cropped
+- Each Pokemon's regular and shiny sprites share one deflate stream, and all streams are embedded as a single blob
+- At runtime the sprite is inflated and drawn with half blocks, emitting only the color changes each cell needs and resetting colors at every line end
 - No runtime filesystem dependencies
-- Binary size: ~3MB (fully self-contained; sprites zlib-compressed)
+- Binary size: ~1.4MB (fully self-contained)
 
 ### Fast Random Selection
 
-- Uses a small xorshift generator with a nanosecond clock seed
+- Seeded from OS entropy
 - 1/128 chance for shiny (mimicking main series games)
 - O(1) lookup by index
 - Zero filesystem I/O at runtime
@@ -142,16 +143,17 @@ zigdex/
 
 Supports multiple lookup methods:
 
-- Case-insensitive name matching (`pikachu`, `PIKACHU`)
+- Case-insensitive name matching (`pikachu`, `PIKACHU`, `"Charizard (Mega X)"`)
 - Slug matching (`charizard-mega-x`)
 - Pokedex number (`25`, `150`)
 
-### Memory Management
+Names and slugs are resolved with a binary search over a table sorted at build time. Unknown names are reported on stderr and make `zigdex` exit with status 1.
 
-- Uses Zig's process allocator for sprite generation
-- Proper `defer` patterns for cleanup
-- No memory leaks in debug builds
-- Efficient argument parsing
+### Startup
+
+- Uses Zig's minimal entry point: no environment map, allocator or thread pool is set up
+- No heap allocation at runtime
+- A handful of system calls per run, with the sprite written in a single `write`
 
 ## Command-Line Options
 
