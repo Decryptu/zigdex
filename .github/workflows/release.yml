@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Zig
+        run: |
+          curl -sSfL -o zig.tar.xz https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz
+          echo "70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00  zig.tar.xz" | sha256sum -c
+          tar -xf zig.tar.xz
+          echo "$PWD/zig-x86_64-linux-0.16.0" >> "$GITHUB_PATH"
+
+      - run: zig build test
+
+      - name: Build and package
+        run: |
+          for arch in aarch64 x86_64; do
+            zig build -Doptimize=ReleaseFast -Dtarget=$arch-macos --prefix out/$arch
+            name=zigdex-$GITHUB_REF_NAME-$arch-macos
+            tar -czf $name.tar.gz -C out/$arch/bin zigdex
+            (cd out/$arch/bin && zip -q "$GITHUB_WORKSPACE/$name.zip" zigdex)
+          done
+          sha256sum *.tar.gz *.zip > checksums.txt
+          md5sum *.tar.gz *.zip | sed 's/  / /' > md5sums.txt
+          cat checksums.txt
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --title "Zigdex $GITHUB_REF_NAME" --notes-from-tag *.tar.gz *.zip checksums.txt md5sums.txt
