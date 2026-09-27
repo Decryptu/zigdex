@@ -93,7 +93,7 @@ pub fn main(init: std.process.Init) !void {
         \\    idx: u16,
         \\    slug: []const u8,
         \\    name: []const u8,
-        \\    /// Raw deflate stream of the regular sprite followed by the shiny one.
+        \\    /// Raw deflate stream of the encoded regular sprite followed by the shiny one.
         \\    sprites: []const u8,
         \\    regular_len: u32,
         \\    shiny_len: u32,
@@ -141,14 +141,14 @@ fn addEntry(
         else => return err,
     };
 
-    var text: std.Io.Writer.Allocating = .init(arena);
-    try render(&text.writer, regular);
-    const regular_len = text.written().len;
-    try render(&text.writer, shiny);
-    const total = text.written().len;
+    var encoded: std.Io.Writer.Allocating = .init(arena);
+    try encode(arena, &encoded.writer, regular);
+    const regular_len = encoded.written().len;
+    try encode(arena, &encoded.writer, shiny);
+    const total = encoded.written().len;
 
     const offset = blob.items.len;
-    try deflateRaw(arena, blob, text.written()[0..regular_len], text.written()[regular_len..]);
+    try deflateRaw(arena, blob, encoded.written()[0..regular_len], encoded.written()[regular_len..]);
     max_len.* = @max(max_len.*, total);
 
     return .{
@@ -289,52 +289,31 @@ fn crop(arena: std.mem.Allocator, s: Sprite) !Sprite {
     return .{ .width = width, .cells = cells };
 }
 
-/// Emits the sprite with half blocks, only sending the SGR changes each cell needs.
-/// Opaque tops use `▀` so colors land in fg; a lone bottom pixel uses `▄`.
-fn render(w: *std.Io.Writer, s: Sprite) !void {
-    var fg: ?Rgb = null;
-    var bg: ?Rgb = null;
-    var row = s.cells;
-    while (row.len > 0) : (row = row[s.width..]) {
-        for (row[0..s.width]) |cell| {
-            // A space only shows its background, so it keeps whatever foreground is active.
-            const glyph: []const u8, const want_fg: ?Rgb, const want_bg: ?Rgb = if (cell.top) |top|
-                .{ "▀", top, cell.bottom }
-            else if (cell.bottom) |bottom|
-                .{ "▄", bottom, null }
-            else
-                .{ " ", fg, null };
+/// Writes the layout `src/sprites.zig` renders: width, height, a little-endian u16 palette
+/// length, the RGB palette, then a top and bottom palette index per cell where 0 is transparent.
+/// Indices are u16 when the palette has more than 255 colors.
+fn encode(arena: std.mem.Allocator, w: *std.Io.Writer, s: Sprite) !void {
+    const height = s.cells.len / s.width;
+    if (s.width > 255 or height > 255) return error.SpriteTooLarge;
 
-            var sep: []const u8 = "\x1b[";
-            if (!optEql(fg, want_fg)) {
-                const color = want_fg.?;
-                try w.print("{s}38;2;{d};{d};{d}", .{ sep, color[0], color[1], color[2] });
-                sep = ";";
-                fg = color;
-            }
-            if (!optEql(bg, want_bg)) {
-                if (want_bg) |color| {
-                    try w.print("{s}48;2;{d};{d};{d}", .{ sep, color[0], color[1], color[2] });
-                } else {
-                    try w.print("{s}49", .{sep});
-                }
-                sep = ";";
-                bg = want_bg;
-            }
-            if (sep.len == 1) try w.writeByte('m');
-            try w.writeAll(glyph);
-        }
-        // Resetting before the newline keeps a set background from bleeding into scrolled lines.
-        if (fg != null or bg != null) try w.writeAll("\x1b[0m");
-        fg = null;
-        bg = null;
-        try w.writeByte('\n');
+    var palette: std.AutoArrayHashMapUnmanaged(Rgb, void) = .empty;
+    for (s.cells) |cell| {
+        if (cell.top) |color| try palette.put(arena, color, {});
+        if (cell.bottom) |color| try palette.put(arena, color, {});
     }
-}
 
-fn optEql(a: ?Rgb, b: ?Rgb) bool {
-    if (a == null or b == null) return a == null and b == null;
-    return std.mem.eql(u8, &a.?, &b.?);
+    try w.writeByte(@intCast(s.width));
+    try w.writeByte(@intCast(height));
+    try w.writeInt(u16, @intCast(palette.count()), .little);
+    for (palette.keys()) |color| try w.writeAll(&color);
+
+    const wide = palette.count() > 255;
+    for (s.cells) |cell| {
+        for ([_]?Rgb{ cell.top, cell.bottom }) |pixel| {
+            const index: u16 = if (pixel) |color| @intCast(palette.getIndex(color).? + 1) else 0;
+            if (wide) try w.writeInt(u16, index, .little) else try w.writeByte(@intCast(index));
+        }
+    }
 }
 
 /// Compresses both sprites as one raw deflate stream so the shiny one can reference the regular one.

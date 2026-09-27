@@ -10,7 +10,8 @@ pub fn main(init: std.process.Init.Minimal) !u8 {
     const args_only = argv[@min(argv.len, 1)..];
     const args = cli.parse(args_only);
 
-    var buf: [4096]u8 = undefined;
+    // Large enough that a sprite usually leaves in a single write.
+    var buf: [32 * 1024]u8 = undefined;
     var stdout = std.Io.File.stdout().writerStreaming(io, &buf);
     const w = &stdout.interface;
 
@@ -21,7 +22,8 @@ pub fn main(init: std.process.Init.Minimal) !u8 {
     }
 
     if (args.random) {
-        const seed: u64 = @truncate(@as(u96, @bitCast(std.Io.Clock.real.now(io).nanoseconds)));
+        var seed: u64 = undefined;
+        io.random(std.mem.asBytes(&seed));
         const pokemon, const shiny = sprites.randomPokemon(seed);
         try sprites.write(w, pokemon, shiny or args.shiny, args.hide_name);
         try w.flush();
@@ -69,18 +71,18 @@ test "Pokemon lookup" {
     try std.testing.expect(sprites.findPokemon("definitely-not-a-pokemon") == null);
 }
 
-test "sprites decode to the regular or shiny variant" {
-    var buf: [64 * 1024]u8 = undefined;
+test "sprites render the regular or shiny variant" {
     const pikachu = sprites.findPokemon("pikachu").?;
-
-    var regular: std.Io.Writer = .fixed(&buf);
+    var regular_buf: [64 * 1024]u8 = undefined;
+    var regular: std.Io.Writer = .fixed(&regular_buf);
     try sprites.write(&regular, pikachu, false, false);
-    try std.testing.expect(std.mem.startsWith(u8, regular.buffered(), "Pikachu\n"));
-    try std.testing.expectEqual("Pikachu\n".len + pikachu.regular_len, regular.buffered().len);
-
-    var shiny: std.Io.Writer = .fixed(buf[regular.end..]);
+    var shiny_buf: [64 * 1024]u8 = undefined;
+    var shiny: std.Io.Writer = .fixed(&shiny_buf);
     try sprites.write(&shiny, pikachu, true, true);
-    try std.testing.expectEqual(pikachu.shiny_len, shiny.buffered().len);
-    try std.testing.expect(!std.mem.eql(u8, regular.buffered()["Pikachu\n".len..], shiny.buffered()));
-    try std.testing.expect(std.mem.endsWith(u8, shiny.buffered(), "\n"));
+
+    try std.testing.expect(std.mem.startsWith(u8, regular.buffered(), "Pikachu\n     \x1b[38;2;0;0;0m▄\x1b[48;2;65;65;65m▀\x1b[48;2;0;0;0m▀\x1b[49m         ▄▄  \x1b[0m\n"));
+    const regular_art = regular.buffered()["Pikachu\n".len..];
+    try std.testing.expectEqual(std.mem.count(u8, regular_art, "\n"), std.mem.count(u8, shiny.buffered(), "\n"));
+    try std.testing.expect(!std.mem.eql(u8, regular_art, shiny.buffered()));
+    try std.testing.expect(std.mem.endsWith(u8, shiny.buffered(), "\x1b[0m\n"));
 }
