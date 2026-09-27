@@ -1,174 +1,368 @@
 const std = @import("std");
-const c = @cImport({
-    @cInclude("zlib.h");
-});
 
-fn compressData(allocator: std.mem.Allocator, input: []const u8) ![]u8 {
-    var dest_len: c.uLongf = @intCast(c.compressBound(@intCast(input.len)));
-    const dest = try allocator.alloc(u8, @intCast(dest_len));
+const Rgb = [3]u8;
 
-    const ret = c.compress2(dest.ptr, &dest_len, input.ptr, @intCast(input.len), 9);
-    if (ret != c.Z_OK) return error.CompressionFailed;
+/// One terminal cell holds two vertical pixels; null is transparent.
+const Cell = struct { top: ?Rgb, bottom: ?Rgb };
 
-    // Resize to actual compressed size
-    return try allocator.realloc(dest, @intCast(dest_len));
-}
+const Sprite = struct {
+    width: usize,
+    cells: []Cell,
+};
+
+const Entry = struct {
+    idx: u16,
+    slug: []const u8,
+    name: []const u8,
+    offset: usize,
+    len: usize,
+    regular_len: usize,
+    shiny_len: usize,
+};
+
+const Key = struct {
+    key: []const u8,
+    index: usize,
+};
 
 pub fn main(init: std.process.Init) !void {
-    const allocator = init.gpa;
-
-    const args = try init.minimal.args.toSlice(init.arena.allocator());
+    const arena = init.arena.allocator();
+    const io = init.io;
+    const args = try init.minimal.args.toSlice(arena);
 
     if (args.len != 4) {
-        std.debug.print("Usage: {s} <pokemon.json> <colorscripts_dir> <output.zig>\n", .{args[0]});
+        std.debug.print("Usage: {s} <pokemon.json> <colorscripts_dir> <output_dir>\n", .{args[0]});
         return error.InvalidArgs;
     }
 
-    const json_path = args[1];
-    const sprites_dir = args[2];
-    const output_path = args[3];
+    const cwd = std.Io.Dir.cwd();
+    const json_data = try cwd.readFileAlloc(io, args[1], arena, .limited(16 * 1024 * 1024));
+    const sprites_dir = try cwd.openDir(io, args[2], .{});
+    const out_dir = try cwd.createDirPathOpen(io, args[3], .{});
 
-    const json_data = try std.Io.Dir.cwd().readFileAlloc(init.io, json_path, allocator, .limited(10 * 1024 * 1024));
-    defer allocator.free(json_data);
+    const parsed = try std.json.parseFromSliceLeaky(std.json.Value, arena, json_data, .{});
 
-    const parsed = try std.json.parseFromSlice(std.json.Value, allocator, json_data, .{});
-    defer parsed.deinit();
-
-    const pokemon_array = parsed.value.array;
-
-    var output = try std.Io.Writer.Allocating.initCapacity(allocator, 1024 * 1024);
-    defer output.deinit();
-    const writer = &output.writer;
-
-    try writer.writeAll("pub const Pokemon = struct {\n");
-    try writer.writeAll("    idx: u16,\n");
-    try writer.writeAll("    slug: []const u8,\n");
-    try writer.writeAll("    name: []const u8,\n");
-    try writer.writeAll("    regular_sprite: []const u8,\n");
-    try writer.writeAll("    shiny_sprite: []const u8,\n");
-    try writer.writeAll("};\n\n");
-
+    var entries: std.ArrayList(Entry) = .empty;
+    var blob: std.ArrayList(u8) = .empty;
+    var max_len: usize = 0;
     var pokemon_count: usize = 0;
-    var form_count: usize = 0;
 
-    try writer.writeAll("pub const pokemon_list = [_]Pokemon{\n");
-
-    for (pokemon_array.items) |item| {
+    for (parsed.array.items) |item| {
         const obj = item.object;
-        const idx = @as(u16, @intCast(obj.get("idx").?.integer));
+        const idx: u16 = @intCast(obj.get("idx").?.integer);
+        if (idx != pokemon_count + 1) return error.PokedexNotContiguous;
         const slug = obj.get("slug").?.string;
-        const name_obj = obj.get("name").?.object;
-        const name_en = name_obj.get("en").?.string;
-
-        const regular_path = try std.fmt.allocPrint(allocator, "{s}/regular/{s}", .{ sprites_dir, slug });
-        defer allocator.free(regular_path);
-
-        const shiny_path = try std.fmt.allocPrint(allocator, "{s}/shiny/{s}", .{ sprites_dir, slug });
-        defer allocator.free(shiny_path);
-
-        const regular_sprite = std.Io.Dir.cwd().readFileAlloc(init.io, regular_path, allocator, .limited(100 * 1024)) catch |err| {
-            std.debug.print("Warning: Could not read {s}: {}\n", .{ regular_path, err });
-            continue;
-        };
-        defer allocator.free(regular_sprite);
-
-        const shiny_sprite = std.Io.Dir.cwd().readFileAlloc(init.io, shiny_path, allocator, .limited(100 * 1024)) catch |err| {
-            std.debug.print("Warning: Could not read {s}: {}\n", .{ shiny_path, err });
-            continue;
-        };
-        defer allocator.free(shiny_sprite);
-
-        // Compress sprites with zlib
-        const regular_compressed = try compressData(allocator, regular_sprite);
-        defer allocator.free(regular_compressed);
-
-        const shiny_compressed = try compressData(allocator, shiny_sprite);
-        defer allocator.free(shiny_compressed);
-
-        try writePokemon(writer, idx, slug, name_en, regular_compressed, shiny_compressed);
+        const name = obj.get("name").?.object.get("en").?.string;
+        try entries.append(arena, try addEntry(arena, io, sprites_dir, &blob, &max_len, idx, slug, name));
         pokemon_count += 1;
     }
 
-    try writer.writeAll("};\n\n");
-    try writer.writeAll("pub const pokemon_forms = [_]Pokemon{\n");
-
-    for (pokemon_array.items) |item| {
+    for (parsed.array.items) |item| {
         const obj = item.object;
-        const idx = @as(u16, @intCast(obj.get("idx").?.integer));
+        const forms = obj.get("forms") orelse continue;
+        const idx: u16 = @intCast(obj.get("idx").?.integer);
         const base_slug = obj.get("slug").?.string;
         const base_name = obj.get("name").?.object.get("en").?.string;
-        const forms = obj.get("forms") orelse continue;
-
-        for (forms.array.items) |form_value| {
-            const form = form_value.string;
-            const slug = try std.fmt.allocPrint(allocator, "{s}-{s}", .{ base_slug, form });
-            defer allocator.free(slug);
-            const display_name = try formDisplayName(allocator, base_name, form);
-            defer allocator.free(display_name);
-
-            const regular_path = try std.fmt.allocPrint(allocator, "{s}/regular/{s}", .{ sprites_dir, slug });
-            defer allocator.free(regular_path);
-            const shiny_path = try std.fmt.allocPrint(allocator, "{s}/shiny/{s}", .{ sprites_dir, slug });
-            defer allocator.free(shiny_path);
-
-            const regular_sprite = std.Io.Dir.cwd().readFileAlloc(init.io, regular_path, allocator, .limited(100 * 1024)) catch |err| {
-                std.debug.print("Warning: Could not read {s}: {}\n", .{ regular_path, err });
-                continue;
-            };
-            defer allocator.free(regular_sprite);
-            const shiny_sprite = std.Io.Dir.cwd().readFileAlloc(init.io, shiny_path, allocator, .limited(100 * 1024)) catch |err| blk: {
-                std.debug.print("Warning: Could not read {s}; using regular sprite for shiny: {}\n", .{ shiny_path, err });
-                break :blk regular_sprite;
-            };
-            defer if (shiny_sprite.ptr != regular_sprite.ptr) allocator.free(shiny_sprite);
-
-            const regular_compressed = try compressData(allocator, regular_sprite);
-            defer allocator.free(regular_compressed);
-            const shiny_compressed = try compressData(allocator, shiny_sprite);
-            defer allocator.free(shiny_compressed);
-
-            try writePokemon(writer, idx, slug, display_name, regular_compressed, shiny_compressed);
-            form_count += 1;
+        for (forms.array.items) |form| {
+            const slug = try std.fmt.allocPrint(arena, "{s}-{s}", .{ base_slug, form.string });
+            const name = try formDisplayName(arena, base_name, form.string);
+            try entries.append(arena, try addEntry(arena, io, sprites_dir, &blob, &max_len, idx, slug, name));
         }
     }
 
-    try writer.writeAll("};\n\n");
-    try writer.print("pub const pokemon_count = {d};\n", .{pokemon_count});
-    try writer.print("pub const pokemon_form_count = {d};\n", .{form_count});
-
-    try std.Io.Dir.cwd().writeFile(init.io, .{ .sub_path = output_path, .data = output.written() });
-}
-
-fn writePokemon(writer: anytype, idx: u16, slug: []const u8, name: []const u8, regular: []const u8, shiny: []const u8) !void {
-    try writer.print("    .{{ .idx = {d}, .slug = \"{s}\", .name = \"{s}\",\n", .{ idx, slug, name });
-    try writeSprite(writer, "regular_sprite", regular);
-    try writer.writeAll(",\n");
-    try writeSprite(writer, "shiny_sprite", shiny);
-    try writer.writeAll(" },\n");
-}
-
-fn writeSprite(writer: anytype, field: []const u8, sprite: []const u8) !void {
-    try writer.print("      .{s} = &[_]u8{{", .{field});
-    for (sprite, 0..) |byte, i| {
-        if (i > 0) try writer.writeAll(",");
-        if (i % 16 == 0) try writer.writeAll("\n        ");
-        try writer.print("{d}", .{byte});
+    // Earlier keys win on collision, preserving lookup precedence: slugs before names, species before forms.
+    var keys: std.ArrayList(Key) = .empty;
+    var seen: std.StringHashMapUnmanaged(void) = .empty;
+    for ([_]bool{ true, false }) |by_slug| {
+        for (entries.items, 0..) |entry, i| {
+            const key = try std.ascii.allocLowerString(arena, if (by_slug) entry.slug else entry.name);
+            if ((try seen.getOrPut(arena, key)).found_existing) continue;
+            try keys.append(arena, .{ .key = key, .index = i });
+        }
     }
-    try writer.writeAll("\n      }");
+    std.mem.sortUnstable(Key, keys.items, {}, struct {
+        fn lessThan(_: void, a: Key, b: Key) bool {
+            return std.mem.lessThan(u8, a.key, b.key);
+        }
+    }.lessThan);
+
+    var source: std.Io.Writer.Allocating = .init(arena);
+    const w = &source.writer;
+    try w.print(
+        \\pub const Pokemon = struct {{
+        \\    idx: u16,
+        \\    slug: []const u8,
+        \\    name: []const u8,
+        \\    /// Raw deflate stream of the regular sprite followed by the shiny one.
+        \\    sprites: []const u8,
+        \\    regular_len: u32,
+        \\    shiny_len: u32,
+        \\}};
+        \\
+        \\pub const Key = struct {{ key: []const u8, index: u16 }};
+        \\
+        \\pub const pokemon_count = {d};
+        \\pub const max_sprites_len = {d};
+        \\
+        \\const blob = @embedFile("sprites.bin");
+        \\
+        \\/// National dex species in order, followed by alternate forms.
+        \\pub const pokemon = [_]Pokemon{{
+        \\
+    , .{ pokemon_count, max_len });
+    for (entries.items) |e| {
+        try w.print("    .{{ .idx = {d}, .slug = \"{f}\", .name = \"{f}\", .sprites = blob[{d}..{d}], .regular_len = {d}, .shiny_len = {d} }},\n", .{
+            e.idx, std.zig.fmtString(e.slug), std.zig.fmtString(e.name), e.offset, e.offset + e.len, e.regular_len, e.shiny_len,
+        });
+    }
+    try w.writeAll("};\n\n/// Lowercase slugs and names, sorted for binary search.\npub const keys = [_]Key{\n");
+    for (keys.items) |k| {
+        try w.print("    .{{ .key = \"{f}\", .index = {d} }},\n", .{ std.zig.fmtString(k.key), k.index });
+    }
+    try w.writeAll("};\n");
+
+    try out_dir.writeFile(io, .{ .sub_path = "sprites.bin", .data = blob.items });
+    try out_dir.writeFile(io, .{ .sub_path = "embedded_sprites.zig", .data = source.written() });
 }
 
-fn formDisplayName(allocator: std.mem.Allocator, base_name: []const u8, form: []const u8) ![]u8 {
-    const label = try allocator.alloc(u8, form.len);
-    defer allocator.free(label);
+fn addEntry(
+    arena: std.mem.Allocator,
+    io: std.Io,
+    dir: std.Io.Dir,
+    blob: *std.ArrayList(u8),
+    max_len: *usize,
+    idx: u16,
+    slug: []const u8,
+    name: []const u8,
+) !Entry {
+    const regular = try loadSprite(arena, io, dir, "regular", slug);
+    const shiny = loadSprite(arena, io, dir, "shiny", slug) catch |err| switch (err) {
+        error.FileNotFound => regular,
+        else => return err,
+    };
+
+    var text: std.Io.Writer.Allocating = .init(arena);
+    try render(&text.writer, regular);
+    const regular_len = text.written().len;
+    try render(&text.writer, shiny);
+    const total = text.written().len;
+
+    const offset = blob.items.len;
+    try deflateRaw(arena, blob, text.written()[0..regular_len], text.written()[regular_len..]);
+    max_len.* = @max(max_len.*, total);
+
+    return .{
+        .idx = idx,
+        .slug = slug,
+        .name = name,
+        .offset = offset,
+        .len = blob.items.len - offset,
+        .regular_len = regular_len,
+        .shiny_len = total - regular_len,
+    };
+}
+
+fn loadSprite(arena: std.mem.Allocator, io: std.Io, dir: std.Io.Dir, variant: []const u8, slug: []const u8) !Sprite {
+    const path = try std.fmt.allocPrint(arena, "{s}/{s}", .{ variant, slug });
+    const text = try dir.readFileAlloc(io, path, arena, .limited(1024 * 1024));
+    const sprite = parse(arena, text) catch |err| {
+        std.debug.print("{s}: {t}\n", .{ path, err });
+        return err;
+    };
+    return crop(arena, sprite);
+}
+
+/// Replays the ANSI text like a terminal would, recording what each cell shows.
+fn parse(arena: std.mem.Allocator, text: []const u8) !Sprite {
+    var cells: std.ArrayList(Cell) = .empty;
+    var width: ?usize = null;
+    var row_start: usize = 0;
+    var fg: ?Rgb = null;
+    var bg: ?Rgb = null;
+
+    var i: usize = 0;
+    while (i < text.len) {
+        if (std.mem.startsWith(u8, text[i..], "\x1b[")) {
+            const end = std.mem.indexOfScalarPos(u8, text, i, 'm') orelse return error.BadEscape;
+            try applySgr(text[i + 2 .. end], &fg, &bg);
+            i = end + 1;
+        } else if (text[i] == '\n') {
+            const row_len = cells.items.len - row_start;
+            if (row_len != 0) {
+                if (width != null and width != row_len) return error.RaggedRows;
+                width = row_len;
+            }
+            row_start = cells.items.len;
+            i += 1;
+        } else if (text[i] == ' ') {
+            try cells.append(arena, .{ .top = bg, .bottom = bg });
+            i += 1;
+        } else if (std.mem.startsWith(u8, text[i..], "▀")) {
+            try cells.append(arena, .{ .top = fg, .bottom = bg });
+            i += "▀".len;
+        } else if (std.mem.startsWith(u8, text[i..], "▄")) {
+            try cells.append(arena, .{ .top = bg, .bottom = fg });
+            i += "▄".len;
+        } else return error.UnexpectedByte;
+    }
+    if (cells.items.len != row_start) return error.MissingFinalNewline;
+    return .{ .width = width orelse return error.EmptySprite, .cells = cells.items };
+}
+
+fn applySgr(params: []const u8, fg: *?Rgb, bg: *?Rgb) !void {
+    var values: [16]u8 = undefined;
+    var n: usize = 0;
+    var it = std.mem.splitScalar(u8, params, ';');
+    while (it.next()) |p| : (n += 1) {
+        if (n == values.len) return error.BadEscape;
+        values[n] = if (p.len == 0) 0 else try std.fmt.parseInt(u8, p, 10);
+    }
+
+    var i: usize = 0;
+    while (i < n) : (i += 1) switch (values[i]) {
+        0 => {
+            fg.* = null;
+            bg.* = null;
+        },
+        39 => fg.* = null,
+        49 => bg.* = null,
+        38, 48 => {
+            const target = if (values[i] == 38) fg else bg;
+            if (i + 2 < n and values[i + 1] == 5) {
+                target.* = xterm256(values[i + 2]);
+                i += 2;
+            } else if (i + 4 < n and values[i + 1] == 2) {
+                target.* = values[i + 2 ..][0..3].*;
+                i += 4;
+            } else return error.BadEscape;
+        },
+        else => return error.UnsupportedSgr,
+    };
+}
+
+/// Resolves 256-color indices with xterm's default palette so every sprite renders in truecolor.
+fn xterm256(n: u8) Rgb {
+    const system = [16]Rgb{
+        .{ 0, 0, 0 },       .{ 205, 0, 0 },   .{ 0, 205, 0 },   .{ 205, 205, 0 },
+        .{ 0, 0, 238 },     .{ 205, 0, 205 }, .{ 0, 205, 205 }, .{ 229, 229, 229 },
+        .{ 127, 127, 127 }, .{ 255, 0, 0 },   .{ 0, 255, 0 },   .{ 255, 255, 0 },
+        .{ 92, 92, 255 },   .{ 255, 0, 255 }, .{ 0, 255, 255 }, .{ 255, 255, 255 },
+    };
+    if (n < 16) return system[n];
+    if (n < 232) {
+        const levels = [6]u8{ 0, 95, 135, 175, 215, 255 };
+        const i = n - 16;
+        return .{ levels[i / 36], levels[i / 6 % 6], levels[i % 6] };
+    }
+    const gray = 8 + 10 * (n - 232);
+    return .{ gray, gray, gray };
+}
+
+fn isBlank(cell: Cell) bool {
+    return cell.top == null and cell.bottom == null;
+}
+
+/// Drops fully transparent border rows and columns.
+fn crop(arena: std.mem.Allocator, s: Sprite) !Sprite {
+    const height = s.cells.len / s.width;
+    var top: usize = height;
+    var bottom: usize = 0;
+    var left: usize = s.width;
+    var right: usize = 0;
+    for (0..height) |y| {
+        for (0..s.width) |x| {
+            if (isBlank(s.cells[y * s.width + x])) continue;
+            top = @min(top, y);
+            bottom = @max(bottom, y + 1);
+            left = @min(left, x);
+            right = @max(right, x + 1);
+        }
+    }
+    if (top == height) return error.EmptySprite;
+    if (top == 0 and bottom == height and left == 0 and right == s.width) return s;
+
+    const width = right - left;
+    const cells = try arena.alloc(Cell, width * (bottom - top));
+    for (top..bottom, 0..) |y, row| {
+        @memcpy(cells[row * width ..][0..width], s.cells[y * s.width + left ..][0..width]);
+    }
+    return .{ .width = width, .cells = cells };
+}
+
+/// Emits the sprite with half blocks, only sending the SGR changes each cell needs.
+/// Opaque tops use `▀` so colors land in fg; a lone bottom pixel uses `▄`.
+fn render(w: *std.Io.Writer, s: Sprite) !void {
+    var fg: ?Rgb = null;
+    var bg: ?Rgb = null;
+    var row = s.cells;
+    while (row.len > 0) : (row = row[s.width..]) {
+        for (row[0..s.width]) |cell| {
+            // A space only shows its background, so it keeps whatever foreground is active.
+            const glyph: []const u8, const want_fg: ?Rgb, const want_bg: ?Rgb = if (cell.top) |top|
+                .{ "▀", top, cell.bottom }
+            else if (cell.bottom) |bottom|
+                .{ "▄", bottom, null }
+            else
+                .{ " ", fg, null };
+
+            var sep: []const u8 = "\x1b[";
+            if (!optEql(fg, want_fg)) {
+                const color = want_fg.?;
+                try w.print("{s}38;2;{d};{d};{d}", .{ sep, color[0], color[1], color[2] });
+                sep = ";";
+                fg = color;
+            }
+            if (!optEql(bg, want_bg)) {
+                if (want_bg) |color| {
+                    try w.print("{s}48;2;{d};{d};{d}", .{ sep, color[0], color[1], color[2] });
+                } else {
+                    try w.print("{s}49", .{sep});
+                }
+                sep = ";";
+                bg = want_bg;
+            }
+            if (sep.len == 1) try w.writeByte('m');
+            try w.writeAll(glyph);
+        }
+        // Resetting before the newline keeps a set background from bleeding into scrolled lines.
+        if (fg != null or bg != null) try w.writeAll("\x1b[0m");
+        fg = null;
+        bg = null;
+        try w.writeByte('\n');
+    }
+}
+
+fn optEql(a: ?Rgb, b: ?Rgb) bool {
+    if (a == null or b == null) return a == null and b == null;
+    return std.mem.eql(u8, &a.?, &b.?);
+}
+
+/// Compresses both sprites as one raw deflate stream so the shiny one can reference the regular one.
+fn deflateRaw(arena: std.mem.Allocator, out: *std.ArrayList(u8), regular: []const u8, shiny: []const u8) !void {
+    // Compressed output is smaller than its input, and Compress needs a non-empty output buffer.
+    try out.ensureUnusedCapacity(arena, regular.len + shiny.len);
+    var aw: std.Io.Writer.Allocating = .fromArrayList(arena, out);
+    defer out.* = aw.toArrayList();
+    var window: [std.compress.flate.max_window_len]u8 = undefined;
+    var z: std.compress.flate.Compress = try .init(&aw.writer, &window, .raw, .best);
+    try z.writer.writeAll(regular);
+    // Inflating straight into the output cannot stop inside a match, so none may cross into the shiny sprite.
+    try z.writer.flush();
+    try z.writer.writeAll(shiny);
+    try z.finish();
+}
+
+fn formDisplayName(arena: std.mem.Allocator, base_name: []const u8, form: []const u8) ![]u8 {
+    const label = try arena.dupe(u8, form);
     var capitalize = true;
-    for (form, 0..) |char, i| {
-        if (char == '-') {
-            label[i] = ' ';
+    for (label) |*char| {
+        if (char.* == '-') {
+            char.* = ' ';
             capitalize = true;
         } else {
-            label[i] = if (capitalize) std.ascii.toUpper(char) else char;
+            if (capitalize) char.* = std.ascii.toUpper(char.*);
             capitalize = false;
         }
     }
-    return std.fmt.allocPrint(allocator, "{s} ({s})", .{ base_name, label });
+    return std.fmt.allocPrint(arena, "{s} ({s})", .{ base_name, label });
 }

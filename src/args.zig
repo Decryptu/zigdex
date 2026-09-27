@@ -1,62 +1,65 @@
 const std = @import("std");
 
+const Flag = enum { help, random, shiny, hide_name };
+
+const flags: std.StaticStringMap(Flag) = .initComptime(.{
+    .{ "-h", .help },
+    .{ "--help", .help },
+    .{ "-r", .random },
+    .{ "--random", .random },
+    .{ "random", .random },
+    .{ "-s", .shiny },
+    .{ "--shiny", .shiny },
+    .{ "--hide-name", .hide_name },
+});
+
 pub const Args = struct {
     help: bool = false,
     random: bool = false,
     shiny: bool = false,
     hide_name: bool = false,
-    pokemon_names: [16][]const u8 = undefined,
-    count: usize = 0,
+    name_count: usize = 0,
 };
 
-pub fn parse(args: []const [:0]const u8) Args {
-    var result = Args{};
+/// Every argument that is not a flag names a Pokemon.
+pub fn isName(arg: []const u8) bool {
+    return flags.get(arg) == null;
+}
 
-    // Fast path: no arguments
-    if (args.len == 1) {
-        return result;
-    }
-
-    // Parse without any allocations
-    for (args[1..]) |arg| {
-        // Check for flags and special keywords
-        if (std.mem.eql(u8, arg, "-h") or std.mem.eql(u8, arg, "--help")) {
-            result.help = true;
-        } else if (std.mem.eql(u8, arg, "-r") or std.mem.eql(u8, arg, "--random") or std.mem.eql(u8, arg, "random")) {
-            result.random = true;
-        } else if (std.mem.eql(u8, arg, "-s") or std.mem.eql(u8, arg, "--shiny")) {
-            result.shiny = true;
-        } else if (std.mem.eql(u8, arg, "--hide-name")) {
-            result.hide_name = true;
-        } else if (result.count < result.pokemon_names.len) {
-            // Everything else is a Pokemon name
-            result.pokemon_names[result.count] = arg;
-            result.count += 1;
+pub fn parse(args: []const [*:0]const u8) Args {
+    var result: Args = .{};
+    for (args) |ptr| {
+        const flag = flags.get(std.mem.span(ptr)) orelse {
+            result.name_count += 1;
+            continue;
+        };
+        switch (flag) {
+            .help => result.help = true,
+            .random => result.random = true,
+            .shiny => result.shiny = true,
+            .hide_name => result.hide_name = true,
         }
     }
-
     return result;
 }
 
-pub fn printUsage(io: std.Io) !void {
-    try std.Io.File.stdout().writeStreamingAll(io,
-        \\zigdex - Display Pokemon sprites in your terminal
-        \\
-        \\Usage: zigdex [options] [pokemon...]
-        \\
-        \\Options:
-        \\  -r, --random, random    Display a random pokemon (1/128 chance for shiny)
-        \\  -s, --shiny             Show shiny variant
-        \\  --hide-name             Don't print the Pokemon's name
-        \\  -h, --help              Show this help
-        \\
-        \\Examples:
-        \\  zigdex pikachu
-        \\  zigdex pikachu --shiny --hide-name
-        \\  zigdex bulbasaur charmander squirtle
-        \\  zigdex random
-        \\  zigdex --random
-        \\  zigdex 1 25 150
-        \\
-    );
-}
+pub const usage =
+    \\zigdex - Display Pokemon sprites in your terminal
+    \\
+    \\Usage: zigdex [options] [pokemon...]
+    \\
+    \\Options:
+    \\  -r, --random, random    Display a random pokemon (1/128 chance for shiny)
+    \\  -s, --shiny             Show shiny variant
+    \\  --hide-name             Don't print the Pokemon's name
+    \\  -h, --help              Show this help
+    \\
+    \\Examples:
+    \\  zigdex pikachu
+    \\  zigdex pikachu --shiny --hide-name
+    \\  zigdex bulbasaur charmander squirtle
+    \\  zigdex random
+    \\  zigdex --random
+    \\  zigdex 1 25 150
+    \\
+;

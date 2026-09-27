@@ -1,93 +1,45 @@
 const std = @import("std");
 const embedded = @import("embedded_sprites");
 
-const Xorshift64 = struct {
-    state: u64,
+pub const Pokemon = embedded.Pokemon;
 
-    fn init(seed: u64) Xorshift64 {
-        return .{ .state = if (seed == 0) 0x123456789abcdef0 else seed };
-    }
-
-    fn next(self: *Xorshift64) u64 {
-        var x = self.state;
-        x ^= x << 13;
-        x ^= x >> 7;
-        x ^= x << 17;
-        self.state = x;
-        return x;
-    }
-
-    fn range(self: *Xorshift64, max: usize) usize {
-        return @as(usize, @intCast(self.next() % max));
-    }
-};
-
-pub fn findPokemon(name: []const u8) ?*const embedded.Pokemon {
-    // Try parsing as ID first (fastest check)
-    if (std.fmt.parseInt(u16, name, 10)) |idx| {
-        for (&embedded.pokemon_list) |*pokemon| {
-            if (pokemon.idx == idx) return pokemon;
-        }
+pub fn findPokemon(query: []const u8) ?*const Pokemon {
+    if (std.fmt.parseUnsigned(u16, query, 10)) |n| {
+        if (n == 0 or n > embedded.pokemon_count) return null;
+        return &embedded.pokemon[n - 1];
     } else |_| {}
 
-    // Linear search by slug
-    for (&embedded.pokemon_list) |*pokemon| {
-        if (std.ascii.eqlIgnoreCase(pokemon.slug, name)) return pokemon;
-    }
-
-    for (&embedded.pokemon_forms) |*pokemon| {
-        if (std.ascii.eqlIgnoreCase(pokemon.slug, name)) return pokemon;
-    }
-
-    // Linear search by name
-    for (&embedded.pokemon_list) |*pokemon| {
-        if (std.ascii.eqlIgnoreCase(pokemon.name, name)) return pokemon;
-    }
-
-    for (&embedded.pokemon_forms) |*pokemon| {
-        if (std.ascii.eqlIgnoreCase(pokemon.name, name)) return pokemon;
-    }
-
-    return null;
+    var buf: [64]u8 = undefined;
+    if (query.len > buf.len) return null;
+    const key = std.ascii.lowerString(&buf, query);
+    const i = std.sort.binarySearch(embedded.Key, &embedded.keys, key, struct {
+        fn order(k: []const u8, item: embedded.Key) std.math.Order {
+            return std.mem.order(u8, k, item.key);
+        }
+    }.order) orelse return null;
+    return &embedded.pokemon[embedded.keys[i].index];
 }
 
-inline fn getSprite(pokemon: *const embedded.Pokemon, shiny: bool) []const u8 {
-    return if (shiny) pokemon.shiny_sprite else pokemon.regular_sprite;
+pub fn randomPokemon(seed: u64) struct { *const Pokemon, bool } {
+    var prng: std.Random.DefaultPrng = .init(seed);
+    const random = prng.random();
+    const shiny = random.uintLessThan(u8, 128) == 0;
+    return .{ &embedded.pokemon[random.uintLessThan(usize, embedded.pokemon_count)], shiny };
 }
 
-pub fn displayRandom(io: std.Io, force_shiny: bool, hide_name: bool) !void {
-    const seed = @as(u64, @bitCast(@as(i64, @truncate(std.Io.Clock.real.now(io).nanoseconds))));
-    var rng = Xorshift64.init(seed);
-
-    const is_shiny = force_shiny or (rng.next() % 128 == 0);
-    const index = rng.range(embedded.pokemon_count);
-    const pokemon = &embedded.pokemon_list[index];
-
-    try displayPokemon(io, pokemon, is_shiny, hide_name);
-}
-
-pub fn display(io: std.Io, name: []const u8, shiny: bool, hide_name: bool) !void {
-    const pokemon = findPokemon(name) orelse return error.PokemonNotFound;
-    try displayPokemon(io, pokemon, shiny, hide_name);
-}
-
-fn displayPokemon(io: std.Io, pokemon: *const embedded.Pokemon, shiny: bool, hide_name: bool) !void {
-    const stdout = std.Io.File.stdout();
-
+pub fn write(w: *std.Io.Writer, pokemon: *const Pokemon, shiny: bool, hide_name: bool) !void {
     if (!hide_name) {
-        var buf: [256]u8 = undefined;
-        const name_line = try std.fmt.bufPrint(&buf, "{s}\n", .{pokemon.name});
-        try stdout.writeStreamingAll(io, name_line);
+        try w.writeAll(pokemon.name);
+        try w.writeByte('\n');
     }
 
-    // Decompress zlib-compressed sprite and write to stdout
-    const compressed = getSprite(pokemon, shiny);
-    var reader: std.Io.Reader = .fixed(compressed);
-    var decompress_buf: [std.compress.flate.max_window_len]u8 = undefined;
-    var decompress: std.compress.flate.Decompress = .init(&reader, .zlib, &decompress_buf);
-
-    var write_buf: [8192]u8 = undefined;
-    var file_writer = stdout.writerStreaming(io, &write_buf);
-    _ = try decompress.reader.streamRemaining(&file_writer.interface);
-    try file_writer.interface.flush();
+    // Without a window buffer, flate inflates straight into `out` and uses it as history.
+    var buf: [embedded.max_sprites_len]u8 = undefined;
+    var out: std.Io.Writer = .fixed(&buf);
+    var in: std.Io.Reader = .fixed(pokemon.sprites);
+    var inflate: std.compress.flate.Decompress = .init(&in, .raw, &.{});
+    const start: usize = if (shiny) pokemon.regular_len else 0;
+    const len: usize = if (shiny) pokemon.shiny_len else pokemon.regular_len;
+    try inflate.reader.streamExact(&out, start + len);
+    try w.writeAll(buf[start..][0..len]);
 }
