@@ -23,19 +23,22 @@ A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
 
 ## Performance
 
-| Command | Median [µs] | Min [µs] | Relative |
-|:---|---:|---:|---:|
-| `zigdex random` | 185 | 138 | 1.00 |
-| `pokeget random` | 2158 | 1860 | 11.7 |
-| `krabby random` | 6281 | 5423 | 34.0 |
+Mean time of `random`, measured with `hyperfine -N --warmup 100 --runs 2000`:
+
+| Command | macOS 27, Apple Silicon | Linux x86_64 |
+|:---|---:|---:|
+| `zigdex random` | 1.3 ms | 0.23 ms |
+| `pokeget random` | 1.7 ms | 2.24 ms |
+| `krabby random` | 3.9 ms | 6.50 ms |
 
 ```ascii
-zigdex   ░░░░░░░░░░  0.19ms  ← 34x faster than krabby
-pokeget  ▓▓▓░░░░░░░  2.16ms
-krabby   ▓▓▓▓▓▓▓▓▓▓  6.28ms
+macOS
+zigdex   ▓▓▓░░░░░░░  1.3ms  ← 2.9x faster than krabby
+pokeget  ▓▓▓▓░░░░░░  1.7ms
+krabby   ▓▓▓▓▓▓▓▓▓▓  3.9ms
 ```
 
-<sub>Linux x86_64, pokeget 1.6.7, krabby 0.3.0, `hyperfine -N --warmup 100 --runs 2000` pinned to one core</sub>
+<sub>On macOS most of zigdex's time is process startup (dyld and libSystem), which every binary pays. Linux runs used pokeget 1.6.7 and krabby 0.3.0, pinned to one core.</sub>
 
 ## Installation
 
