@@ -1,18 +1,34 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const sprites = @import("sprites.zig");
 const cli = @import("args.zig");
 
-// The minimal entry point skips building the environment map, allocators and a threaded Io
-// that std.process.Init would set up, which otherwise dominates the runtime.
-pub fn main(init: std.process.Init.Minimal) !u8 {
-    const io = std.Io.Threaded.global_single_threaded.io();
-    const argv = init.args.vector;
+// std.debug and std.log write through a threaded Io by default, which keeps its whole vtable in
+// every binary. Release builds swap in the stub Io, so a panic still aborts but prints nothing.
+pub const std_options_debug_threaded_io: ?*std.Io.Threaded = if (builtin.mode == .Debug) std.Io.Threaded.global_single_threaded else null;
+pub const std_options_debug_io: std.Io = if (builtin.mode == .Debug) std.Io.Threaded.global_single_threaded.io() else .failing;
+
+// The minimal entry point skips the environment map, allocators and threaded Io that
+// std.process.Init sets up. std.Io is avoided entirely: on macOS its vtable imports about a
+// hundred libSystem functions that dyld resolves at every launch, costing more than the rest of
+// the run.
+pub fn main(init: std.process.Init.Minimal) u8 {
+    return run(init.args.vector) catch |err| {
+        var buf: [64]u8 = undefined;
+        var stderr: FdWriter = .init(std.posix.STDERR_FILENO, &buf);
+        stderr.interface.print("zigdex: {t}\n", .{err}) catch {};
+        stderr.interface.flush() catch {};
+        return 1;
+    };
+}
+
+fn run(argv: []const [*:0]const u8) !u8 {
     const args_only = argv[@min(argv.len, 1)..];
     const args = cli.parse(args_only);
 
     // Large enough that a sprite usually leaves in a single write.
     var buf: [32 * 1024]u8 = undefined;
-    var stdout = std.Io.File.stdout().writerStreaming(io, &buf);
+    var stdout: FdWriter = .init(std.posix.STDOUT_FILENO, &buf);
     const w = &stdout.interface;
 
     if (args.help or (!args.random and args.name_count == 0)) {
@@ -22,9 +38,7 @@ pub fn main(init: std.process.Init.Minimal) !u8 {
     }
 
     if (args.random) {
-        var seed: u64 = undefined;
-        io.random(std.mem.asBytes(&seed));
-        const pokemon, const shiny = sprites.randomPokemon(seed);
+        const pokemon, const shiny = sprites.randomPokemon(randomSeed());
         try sprites.write(w, pokemon, shiny or args.shiny, args.hide_name);
         try w.flush();
         return 0;
@@ -37,7 +51,7 @@ pub fn main(init: std.process.Init.Minimal) !u8 {
         const pokemon = sprites.findPokemon(name) orelse {
             try w.flush();
             var err_buf: [256]u8 = undefined;
-            var stderr = std.Io.File.stderr().writerStreaming(io, &err_buf);
+            var stderr: FdWriter = .init(std.posix.STDERR_FILENO, &err_buf);
             try stderr.interface.print("Pokemon '{s}' not found.\n", .{name});
             try stderr.interface.flush();
             status = 1;
@@ -48,6 +62,53 @@ pub fn main(init: std.process.Init.Minimal) !u8 {
     try w.flush();
     return status;
 }
+
+fn randomSeed() u64 {
+    var seed: u64 = undefined;
+    const bytes = std.mem.asBytes(&seed);
+    switch (builtin.os.tag) {
+        .linux => _ = std.os.linux.getrandom(bytes, bytes.len, 0),
+        else => std.c.arc4random_buf(bytes, bytes.len),
+    }
+    return seed;
+}
+
+const FdWriter = struct {
+    fd: std.posix.fd_t,
+    interface: std.Io.Writer,
+
+    fn init(fd: std.posix.fd_t, buffer: []u8) FdWriter {
+        return .{ .fd = fd, .interface = .{ .buffer = buffer, .vtable = &.{ .drain = drain } } };
+    }
+
+    fn drain(w: *std.Io.Writer, data: []const []const u8, splat: usize) std.Io.Writer.Error!usize {
+        const fd = @as(*FdWriter, @alignCast(@fieldParentPtr("interface", w))).fd;
+        try writeAll(fd, w.buffered());
+        w.end = 0;
+        var n: usize = 0;
+        for (data[0 .. data.len - 1]) |bytes| {
+            try writeAll(fd, bytes);
+            n += bytes.len;
+        }
+        for (0..splat) |_| {
+            try writeAll(fd, data[data.len - 1]);
+            n += data[data.len - 1].len;
+        }
+        return n;
+    }
+
+    fn writeAll(fd: std.posix.fd_t, bytes: []const u8) std.Io.Writer.Error!void {
+        var rest = bytes;
+        while (rest.len > 0) {
+            const rc = std.posix.system.write(fd, rest.ptr, rest.len);
+            switch (std.posix.errno(rc)) {
+                .SUCCESS => rest = rest[@intCast(rc)..],
+                .INTR => {},
+                else => return error.WriteFailed,
+            }
+        }
+    }
+};
 
 test "CLI parsing" {
     const argv = [_][*:0]const u8{ "pikachu", "--shiny", "random", "--hide-name", "25" };

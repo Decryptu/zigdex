@@ -133,7 +133,7 @@ zigdex/
 - Each Pokemon's regular and shiny sprites share one deflate stream, and all streams are embedded as a single blob
 - At runtime the sprite is inflated and drawn with half blocks, emitting only the color changes each cell needs and resetting colors at every line end
 - No runtime filesystem dependencies
-- Binary size: ~1.4MB (fully self-contained)
+- Binary size: ~1.2MB (fully self-contained)
 
 ### Fast Random Selection
 
@@ -155,6 +155,8 @@ Names and slugs are resolved with a binary search over a table sorted at build t
 ### Startup
 
 - Uses Zig's minimal entry point: no environment map, allocator or thread pool is set up
+- Writes straight to the file descriptor instead of going through `std.Io`, so on macOS dyld resolves only a handful of libSystem symbols at launch
+- Lookup tables store offsets rather than pointers, leaving almost nothing for dyld to rebase
 - No heap allocation at runtime
 - A handful of system calls per run, with the sprite written in a single `write`
 
