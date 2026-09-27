@@ -60,11 +60,11 @@ test "CLI parsing" {
 
 test "Pokemon lookup" {
     const pikachu = sprites.findPokemon("25").?;
-    try std.testing.expectEqualStrings("pikachu", pikachu.slug);
+    try std.testing.expectEqualStrings("pikachu", sprites.text(pikachu.slug));
     try std.testing.expect(pikachu == sprites.findPokemon("PIKACHU").?);
-    try std.testing.expectEqualStrings("charizard-mega-x", sprites.findPokemon("charizard-mega-x").?.slug);
-    try std.testing.expectEqualStrings("charizard-mega-x", sprites.findPokemon("Charizard (Mega X)").?.slug);
-    try std.testing.expectEqualStrings("mr-mime", sprites.findPokemon("Mr. Mime").?.slug);
+    try std.testing.expectEqualStrings("charizard-mega-x", sprites.text(sprites.findPokemon("charizard-mega-x").?.slug));
+    try std.testing.expectEqualStrings("charizard-mega-x", sprites.text(sprites.findPokemon("Charizard (Mega X)").?.slug));
+    try std.testing.expectEqualStrings("mr-mime", sprites.text(sprites.findPokemon("Mr. Mime").?.slug));
     try std.testing.expectEqual(1025, sprites.findPokemon("1025").?.idx);
     try std.testing.expect(sprites.findPokemon("0") == null);
     try std.testing.expect(sprites.findPokemon("1026") == null);
