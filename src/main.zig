@@ -5,8 +5,8 @@ const cli = @import("args.zig");
 
 // std.debug and std.log write through a threaded Io by default, which keeps its whole vtable in
 // every binary. Release builds swap in the stub Io, so a panic still aborts but prints nothing.
-pub const std_options_debug_threaded_io: ?*std.Io.Threaded = if (builtin.mode == .Debug) std.Io.Threaded.global_single_threaded else null;
-pub const std_options_debug_io: std.Io = if (builtin.mode == .Debug) std.Io.Threaded.global_single_threaded.io() else .failing;
+pub const std_options_debug_threaded_io: ?*std.Io.Threaded = if (builtin.mode == .debug) std.Io.Threaded.global_single_threaded else null;
+pub const std_options_debug_io: std.Io = if (builtin.mode == .debug) std.Io.Threaded.global_single_threaded.io() else .failing;
 
 // The minimal entry point skips the environment map, allocators and threaded Io that
 // std.process.Init sets up. std.Io is avoided entirely: on macOS its vtable imports about a

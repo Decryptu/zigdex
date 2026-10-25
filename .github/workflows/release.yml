@@ -26,17 +26,17 @@ jobs:
 
       - name: Install Zig
         run: |
-          curl -sSfL -o zig.tar.xz https://ziglang.org/download/0.16.0/zig-x86_64-linux-0.16.0.tar.xz
-          echo "70e49664a74374b48b51e6f3fdfbf437f6395d42509050588bd49abe52ba3d00  zig.tar.xz" | sha256sum -c
+          curl -sSfL -o zig.tar.xz https://ziglang.org/download/0.17.0/zig-x86_64-linux-0.17.0.tar.xz
+          echo "1cbe9df9f27e6b78d14ccbca43b6703a404ef79ef1c463de901d7f088d4e2026  zig.tar.xz" | sha256sum -c
           tar -xf zig.tar.xz
-          echo "$PWD/zig-x86_64-linux-0.16.0" >> "$GITHUB_PATH"
+          echo "$PWD/zig-x86_64-linux-0.17.0" >> "$GITHUB_PATH"
 
       - run: zig build test
 
       - name: Build and package
         run: |
           for arch in aarch64 x86_64; do
-            zig build -Doptimize=ReleaseFast -Dtarget=$arch-macos --prefix out/$arch
+            zig build -Doptimize=fast -Dtarget=$arch-macos --prefix out/$arch
             name=zigdex-$TAG-$arch-macos
             tar -czf $name.tar.gz -C out/$arch/bin zigdex
             (cd out/$arch/bin && zip -q "$GITHUB_WORKSPACE/$name.zip" zigdex)

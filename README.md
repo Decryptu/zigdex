@@ -4,7 +4,7 @@
 
 <img width="128" height="128" alt="zigdex-logo" src="https://github.com/user-attachments/assets/203c4298-687c-4c72-b2ed-791f5768bab8" />
 
-[![Zig](https://img.shields.io/badge/Zig-0.16.0-orange?logo=zig&logoColor=white)](https://ziglang.org/)
+[![Zig](https://img.shields.io/badge/Zig-0.17.0-orange?logo=zig&logoColor=white)](https://ziglang.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A fast, lightweight Pokemon sprite viewer for your terminal written in Zig.
@@ -171,7 +171,7 @@ Names and slugs are resolved with a binary search over a table sorted at build t
 
 ## Requirements
 
-- Zig 0.16.x
+- Zig 0.17.x
 - Terminal with ANSI color support
 - Pokemon sprite assets in `assets/` directory
 

@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) void {
             .root_source_file = b.path("tools/generate_sprites.zig"),
             .target = b.graph.host,
             // Compiles in well under a second, and its safety checks guard the sprite data.
-            .optimize = .Debug,
+            .optimize = .debug,
         }),
     });
 
@@ -30,7 +30,7 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
             .single_threaded = true,
-            .strip = optimize != .Debug,
+            .strip = optimize != .debug,
             .imports = &.{.{ .name = "embedded_sprites", .module = sprites }},
         }),
     });
@@ -39,9 +39,7 @@ pub fn build(b: *std.Build) void {
 
     const run_cmd = b.addRunArtifact(exe);
     run_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
-    }
+    run_cmd.addPassthruArgs();
 
     const run_step = b.step("run", "Run the app");
     run_step.dependOn(&run_cmd.step);
