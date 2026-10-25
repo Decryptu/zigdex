@@ -8,10 +8,15 @@ pub fn text(span: embedded.Span) []const u8 {
 }
 
 pub fn findPokemon(query: []const u8) ?*const Pokemon {
-    if (std.fmt.parseUnsigned(u16, query, 10)) |n| {
+    // parseUnsigned would also take `_` separators, making "2_5" Pikachu.
+    const is_number = query.len > 0 and for (query) |c| {
+        if (!std.ascii.isDigit(c)) break false;
+    } else true;
+    if (is_number) {
+        const n = std.fmt.parseUnsigned(u16, query, 10) catch return null;
         if (n == 0 or n > embedded.pokemon_count) return null;
         return &embedded.pokemon[n - 1];
-    } else |_| {}
+    }
 
     var buf: [64]u8 = undefined;
     if (query.len > buf.len) return null;

@@ -129,6 +129,8 @@ test "Pokemon lookup" {
     try std.testing.expectEqual(1025, sprites.findPokemon("1025").?.idx);
     try std.testing.expect(sprites.findPokemon("0") == null);
     try std.testing.expect(sprites.findPokemon("1026") == null);
+    try std.testing.expectEqual(25, sprites.findPokemon("000025").?.idx);
+    try std.testing.expect(sprites.findPokemon("2_5") == null);
     try std.testing.expect(sprites.findPokemon("definitely-not-a-pokemon") == null);
 }
 
