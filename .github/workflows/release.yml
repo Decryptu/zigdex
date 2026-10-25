@@ -54,5 +54,7 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
             gh release create "$TAG" --target "$GITHUB_SHA" --title "Zigdex $TAG" --notes "$NOTES" "${assets[@]}"
           else
+            # Checkout leaves the tag lightweight; its message is the notes.
+            git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
             gh release create "$TAG" --title "Zigdex $TAG" --notes-from-tag "${assets[@]}"
           fi
